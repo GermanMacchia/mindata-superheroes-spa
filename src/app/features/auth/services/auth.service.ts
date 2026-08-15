@@ -1,24 +1,26 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-const STORAGE_KEY = 'auth';
+const EMAIL_STORAGE_KEY = 'auth_email';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
-    private readonly authenticated = signal(localStorage.getItem(STORAGE_KEY) === '1');
+    private readonly email = signal(localStorage.getItem(EMAIL_STORAGE_KEY) ?? '');
     private readonly router = inject(Router);
-    readonly isAuthenticated = this.authenticated.asReadonly();
+    readonly isAuthenticated = computed(() => this.email().length > 0);
+    readonly userEmail = this.email.asReadonly();
 
-    login(_email: string, _password: string): void {
-        localStorage.setItem(STORAGE_KEY, '1');
-        this.authenticated.set(true);
+    login(email: string, _password: string): void {
+        localStorage.setItem(EMAIL_STORAGE_KEY, email);
+        this.email.set(email);
         this.router.navigateByUrl('/heroes');
     }
 
     logout(): void {
-        localStorage.removeItem(STORAGE_KEY);
-        this.authenticated.set(false);
+        localStorage.removeItem(EMAIL_STORAGE_KEY);
+        this.email.set('');
+        this.router.navigateByUrl('/login');
     }
 }
