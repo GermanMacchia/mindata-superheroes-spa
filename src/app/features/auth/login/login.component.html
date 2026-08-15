@@ -1,1 +1,46 @@
-<p>login works!</p>
+<div class="login">
+    <img class="login__image" src="superheroes-login.webp" alt="superheroes background" />
+
+    <div class="login__panel">
+        <form class="login__form" [formGroup]="form" (ngSubmit)="submit()">
+            <h1 class="login__title">
+                Superheroes SPA
+                <mat-icon
+                    class="login__info-icon"
+                    matTooltip="Es un login decorativo, cualquier email y contraseña son válidos"
+                    aria-label="Información sobre el login"
+                    >info</mat-icon
+                >
+            </h1>
+
+            <mat-form-field class="login__field" appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" autocomplete="email" />
+                @if (form.controls.email.invalid && form.controls.email.touched) {
+                    <mat-error>Ingresá un email válido</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field class="login__field" appearance="outline">
+                <mat-label>Contraseña</mat-label>
+                <input
+                    matInput
+                    type="password"
+                    formControlName="password"
+                    autocomplete="current-password"
+                />
+                @if (form.controls.password.invalid && form.controls.password.touched) {
+                    <mat-error>La contraseña es obligatoria</mat-error>
+                }
+            </mat-form-field>
+
+            <button class="login__submit" mat-flat-button type="submit" [disabled]="bothEmpty()">
+                Ingresar
+            </button>
+
+            <a class="login__register" href="javascript:void(0)" (click)="$event.preventDefault()"
+                >¿No tenés cuenta? Registrate</a
+            >
+        </form>
+    </div>
+</div>
