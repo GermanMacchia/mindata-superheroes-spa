@@ -1,0 +1,49 @@
+graph TD
+    subgraph "Presentación"
+        A[HeroListComponent]
+        B[HeroFormComponent - modal]
+        HD[HeroDetailComponent]
+        L[LoginComponent]
+    end
+
+    subgraph "Shared UI (reutilizable)"
+        SC[CardComponent]
+        SP[PaginatedListComponent]
+        SS[SearchInputComponent]
+        SD[ConfirmDialogComponent]
+    end
+
+    subgraph "Dominio / Lógica de negocio"
+        D[HeroService]
+        E[SuperHero Model]
+        AU[AuthService]
+    end
+
+    subgraph "Infraestructura transversal"
+        F[LoadingInterceptor]
+        G[UppercaseDirective]
+        GD[AuthGuard]
+    end
+
+    subgraph "Datos"
+        H[(Heroes Seed<br/>en memoria)]
+    end
+
+    A -->|usa| D
+    A -->|compone| SC
+    A -->|compone| SP
+    A -->|compone| SS
+    SC -->|click: navega a| HD
+    A -->|abre modal alta| B
+    HD -->|abre modal editar| B
+    A -->|abre modal confirmar| SD
+    HD -->|usa| D
+    B -->|usa| D
+    D -->|expone| E
+    D -->|lee/escribe| H
+    F -.->|intercepta llamadas| D
+    G -.->|aplica en| B
+    L -->|usa| AU
+    GD -.->|protege ruta de| A
+    GD -.->|protege ruta de| HD
+    GD -->|consulta| AU

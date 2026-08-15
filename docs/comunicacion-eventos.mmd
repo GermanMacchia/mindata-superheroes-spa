@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant L as HeroListComponent
+    participant Dlg as MatDialog
+    participant F as HeroFormComponent
+    participant S as HeroService
+    participant CD as ConfirmDialogComponent
+
+    L->>Dlg: open(HeroFormComponent) [alta o edición]
+    Dlg->>F: instancia modal
+    F->>S: create(hero) / update(hero)
+    S-->>F: Observable<SuperHero>
+    F-->>Dlg: close(hero)
+    Dlg-->>L: afterClosed() → refresca lista
+
+    L->>Dlg: open(ConfirmDialogComponent) [borrado]
+    Dlg->>CD: instancia modal
+    CD-->>Dlg: close(true/false)
+    Dlg-->>L: si true → S.delete(id)

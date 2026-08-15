@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant L as HeroListComponent
+    participant S as HeroService
+    participant Seed as Heroes Seed (memoria)
+    participant HD as HeroDetailComponent
+
+    L->>S: getHeroes(filtro, página)
+    S->>Seed: lee héroes
+    Seed-->>S: SuperHero[]
+    S-->>L: Observable<SuperHero[]>
+    L->>L: heroes$ | async → renderiza cards
+
+    HD->>S: getHeroById(id) [desde ActivatedRoute.paramMap]
+    S->>Seed: busca por id
+    Seed-->>S: SuperHero
+    S-->>HD: Observable<SuperHero>
+    HD->>HD: hero$ | async → renderiza historia
