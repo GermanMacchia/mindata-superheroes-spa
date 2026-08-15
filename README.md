@@ -96,6 +96,19 @@ src/app/
 
 **Nota de diseño — Empty State vs. Loading:** se incluye `empty-state` porque cubre un caso real e independiente del loading: cuando el filtro no arroja resultados (o no hay héroes cargados). El estado de carga en sí ya queda cubierto por el `LoadingInterceptor` + spinner global, por lo que no se agrega un componente skeleton — sumarlo sería redundante para el alcance de esta prueba.
 
+### Convención de estilos
+
+Los estilos propios de cada componente (`.scss`) siguen notación **BEM** (`bloque__elemento--modificador`), con el bloque nombrado según el selector del componente. Ejemplo, para `HeroCardComponent`:
+
+```scss
+.hero-card { }
+.hero-card__title { }
+.hero-card__actions { }
+.hero-card--selected { }
+```
+
+Esto evita colisiones de clases entre componentes y mantiene legible el árbol de estilos sin depender de `::ng-deep` ni de encapsulación desactivada.
+
 ## Esquema de comunicación
 
 ### 1. Comunicación componente → servicio → estado (flujo de datos)
