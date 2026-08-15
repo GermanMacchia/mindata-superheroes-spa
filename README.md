@@ -8,9 +8,9 @@ La aplicación permite registrar, consultar, filtrar, editar y eliminar súper h
 
 El objetivo no es solo cumplir el checklist funcional, sino demostrar:
 
-- Un modelo de datos bien pensado, no trivial.
+- Un buen modelo de datos.
 - Separación clara de responsabilidades (servicio / componentes / modelos).
-- Uso de programación reactiva de punta a punta (Observables, no valores planos).
+- Uso de programación reactiva de punta a punta (Observables y signals).
 - Código testeado (cobertura ≥ 80%) y desarrollado bajo TDD.
 - Un historial de Git ordenado, con ramas y commits descriptivos.
 
@@ -72,6 +72,9 @@ src/app/
 │   │   ├── card/
 │   │   │   ├── card.component.ts
 │   │   │   └── card.component.spec.ts
+│   │   ├── header/
+│   │   │   ├── header.component.ts
+│   │   │   └── header.component.spec.ts
 │   │   ├── confirm-dialog/
 │   │   │   ├── confirm-dialog.component.ts
 │   │   │   └── confirm-dialog.component.spec.ts
@@ -115,11 +118,11 @@ El `AuthGuard` protege la ruta de `heroes` (`canActivate`); si no hay sesión ac
 
 ### Rutas
 
-| Ruta | Componente | Protección | Descripción |
-|---|---|---|---|
-| `/login` | `LoginComponent` | pública | Autenticación mock en memoria |
-| `/heroes` | `HeroListComponent` | `AuthGuard` | Listado paginado/filtrado; alta y edición se abren como modal (`HeroFormComponent`), no navegan a otra ruta |
-| `/heroes/:id` | `HeroDetailComponent` | `AuthGuard` | Detalle del héroe (historia, poderes, universo); se llega haciendo click en la card desde el listado |
+| Ruta          | Componente            | Protección  | Descripción                                                                                                 |
+| ------------- | --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `/login`      | `LoginComponent`      | pública     | Autenticación mock en memoria                                                                               |
+| `/heroes`     | `HeroListComponent`   | `AuthGuard` | Listado paginado/filtrado; alta y edición se abren como modal (`HeroFormComponent`), no navegan a otra ruta |
+| `/heroes/:id` | `HeroDetailComponent` | `AuthGuard` | Detalle del héroe (historia, poderes, universo); se llega haciendo click en la card desde el listado        |
 
 ## Referencia de diseño
 
@@ -128,6 +131,10 @@ Para acelerar el diseño de cards, listas paginadas, formularios y diálogos sin
 **https://material.angular.io/components**
 
 Al ser la fuente oficial de la librería que se instala con `ng add @angular/material`, los patrones (cards, tablas, formularios, dialogs) coinciden exactamente con los componentes reales del proyecto, sin riesgo de adaptar un lenguaje visual ajeno.
+
+## Theme visual
+
+Los colores de la app salen de la imagen de fondo del login (`superheroes-login.webp`). Se generó la paleta completa con el schematic oficial de Angular Material (`ng generate @angular/material:m3-theme`), pasándole como semilla el rojo y el dorado que se ven en esa imagen y apoyandose en la IA para estas desiciones estéticas.
 
 ## Modelo de datos
 
