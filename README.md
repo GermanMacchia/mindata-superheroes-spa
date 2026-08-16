@@ -41,8 +41,15 @@ src/app/
 │   │   └── loading.interceptor.ts
 │   ├── guards/
 │   │   └── auth.guard.ts
-│   └── directives/
-│       └── uppercase.directive.ts
+│   ├── directives/
+│   │   └── uppercase.directive.ts
+│   ├── models/
+│   │   └── paged-result.model.ts
+│   └── services/
+│       ├── mock-api.service.ts       # simula una API paginada (sin backend real)
+│       ├── mock-api.service.spec.ts
+│       ├── loading.service.ts        # signal booleano de loading global
+│       └── loading.service.spec.ts
 ├── features/
 │   ├── auth/
 │   │   ├── login/
@@ -92,9 +99,17 @@ src/app/
 └── app.routes.ts
 ```
 
-**Regla de dependencia:** los componentes de `features/heroes` solo conocen al `HeroService` y al modelo `SuperHero`; nunca acceden directamente al seed de datos. `core/` contiene piezas transversales (interceptor, guard, directiva) que no dependen de ninguna feature. `shared/` contiene componentes de presentación puros (cards, listas paginadas genéricas, buscador, diálogo de confirmación) sin lógica de negocio — reciben datos por `@Input()` y emiten eventos por `@Output()`, para poder reutilizarse tanto en `heroes` como en cualquier feature futura.
+**Regla de dependencia:** los componentes de `features/heroes` solo conocen al `HeroService` y al modelo `SuperHero`; nunca acceden directamente al seed de datos. `core/` contiene piezas transversales (interceptor, guard, directiva, y ahora el `MockApiService` + `PagedResult<T>`) que no dependen de ninguna feature. `shared/` contiene componentes de presentación puros (cards, listas paginadas genéricas, buscador, diálogo de confirmación) sin lógica de negocio — reciben datos por `@Input()` y emiten eventos por `@Output()`, para poder reutilizarse tanto en `heroes` como en cualquier feature futura.
 
-**Nota de diseño — Empty State vs. Loading:** se incluye `empty-state` porque cubre un caso real e independiente del loading: cuando el filtro no arroja resultados (o no hay héroes cargados). El estado de carga en sí ya queda cubierto por el `LoadingInterceptor` + spinner global, por lo que no se agrega un componente skeleton — sumarlo sería redundante para el alcance de esta prueba.
+**Paginación server-driven:** `MockApiService` (`core/services/`) funciona como un backend en memoria. Guarda los datos en colecciones nombradas y expone `paginate<T>(resource, offset, limit): Observable<PagedResult<T>>`, que devuelve `{ items, total, offset, limit }` — la misma forma que devolvería un endpoint REST paginado real. `HeroService` siembra `HEROES_SEED` bajo el nombre `'heroes'` una sola vez y expone `getHeroes(offset, limit)`, que delega en `MockApiService.paginate()`.
+
+`HeroListComponent` guarda `pageIndex`, `pageSize`, `heroes` y `total` como signals. `fetchData()` calcula el `offset` a partir de la página actual, pide los datos y vuelca el resultado en `heroes`/`total`. `PaginatedListComponent` es puramente presentacional: recibe `total`/`pageIndex`/`pageSize`, muestra el paginador de Material, y emite `pageChange` cuando el usuario cambia de página — el listado en sí lo arma quien lo usa, proyectando contenido con `<ng-content>`.
+
+**Loading global:** `LoadingService` (`core/services/`) expone un signal booleano `isLoading` con `start()`/`stop()`. `withLoadingInterceptor` (`core/interceptors/loading.interceptor.ts`) es un operador de RxJS que se "pipea" a cualquier Observable async y llama `start()`/`stop()` automáticamente alrededor de él. `MockApiService.paginate()` lo usa junto con un `delay()` que simula latencia de red, para que el spinner (`mat-progress-spinner` en overlay, en `App`) sea visible al cambiar de página.
+
+Para que el booleano nunca quede pisado por un pedido viejo, `HeroListComponent` aplica debounce a los cambios de página (`debounceTime` sobre un `Subject`) antes de disparar `fetchData()`: clickear la paginación varias veces seguidas dispara un solo pedido, no uno por click.
+
+**Nota de diseño — Empty State vs. Loading:** se incluye `empty-state` porque cubre un caso real e independiente del loading: cuando el filtro no arroja resultados (o no hay héroes cargados). El estado de carga en sí ya queda cubierto por el `LoadingService` + spinner global, por lo que no se agrega un componente skeleton — sumarlo sería redundante para el alcance de esta prueba.
 
 ### Convención de estilos
 
