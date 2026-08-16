@@ -7,13 +7,13 @@ import { LoadingService } from './core/services/loading.service';
 import { HeaderComponent } from './shared/components/header/header.component';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, MatProgressSpinnerModule],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+    selector: 'app-root',
+    imports: [RouterOutlet, HeaderComponent, MatProgressSpinnerModule],
+    templateUrl: './app.html',
+    styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('mindata-superheroes-spa');
-  protected readonly authService = inject(AuthService);
-  protected readonly loadingService = inject(LoadingService);
+    protected readonly title = signal('mindata-superheroes-spa');
+    protected readonly authService = inject(AuthService);
+    protected readonly loadingService = inject(LoadingService);
 }

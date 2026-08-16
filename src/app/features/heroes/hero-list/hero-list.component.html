@@ -1,4 +1,9 @@
-<app-paginated-list [total]="total()" [pageIndex]="pageIndex()" [pageSize]="pageSize()" (pageChange)="onPageChange($event)">
+<app-paginated-list
+    [total]="total()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+>
     <div class="hero-list">
         @for (hero of heroes(); track hero.id) {
             <app-card
