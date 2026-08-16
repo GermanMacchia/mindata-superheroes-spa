@@ -1,1 +1,45 @@
-<p>card works!</p>
+<mat-card class="card" appearance="outlined">
+    <img
+        class="card__image"
+        role="img"
+        [src]="hero().imageUrl || '/no-photo.webp'"
+        [alt]="hero().name"
+    />
+
+    <mat-card-header>
+        <mat-card-title class="card__title">{{ hero().name }}</mat-card-title>
+        @if (hero().realName) {
+            <mat-card-subtitle class="card__subtitle">{{ hero().realName }}</mat-card-subtitle>
+        }
+    </mat-card-header>
+
+    @if (hero().universe) {
+        <mat-card-footer class="card__footer">{{ hero().universe }}</mat-card-footer>
+    }
+
+    <div class="card__overlay" (click)="viewHistory.emit(hero())">
+        <div class="card__overlay-actions">
+            <button
+                mat-icon-button
+                type="button"
+                class="card__overlay-action card__overlay-action--edit"
+                aria-label="Editar héroe"
+                matTooltip="Editar"
+                (click)="$event.stopPropagation(); edit.emit(hero())"
+            >
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button
+                mat-icon-button
+                type="button"
+                class="card__overlay-action card__overlay-action--delete"
+                aria-label="Borrar héroe"
+                matTooltip="Borrar"
+                (click)="$event.stopPropagation(); delete.emit(hero())"
+            >
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+        <span class="card__overlay-text">Ver historia</span>
+    </div>
+</mat-card>

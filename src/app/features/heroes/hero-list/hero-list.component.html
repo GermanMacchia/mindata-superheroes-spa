@@ -1,1 +1,10 @@
-<p>hero-list works!</p>
+<div class="hero-list">
+    @for (hero of heroes(); track hero.id) {
+        <app-card
+            [hero]="hero"
+            (edit)="onEdit($event)"
+            (delete)="onDelete($event)"
+            (viewHistory)="onViewHistory($event)"
+        />
+    }
+</div>
