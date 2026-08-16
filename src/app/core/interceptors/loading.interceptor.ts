@@ -1,5 +1,13 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { Observable, finalize } from 'rxjs';
 
-export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
-    return next(req);
-};
+import { LoadingService } from '../services/loading.service';
+
+// No hay HttpClient real que interceptar (todo pasa por MockApiService), así que
+// esto intercepta a nivel de Observable.
+export const withLoadingInterceptor =
+    (loadingService: LoadingService) =>
+    <T>(source: Observable<T>): Observable<T> => {
+        loadingService.start();
+
+        return source.pipe(finalize(() => loadingService.stop()));
+    };

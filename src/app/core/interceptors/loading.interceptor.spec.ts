@@ -1,17 +1,22 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpInterceptorFn } from '@angular/common/http';
+import { of } from 'rxjs';
 
-import { loadingInterceptor } from './loading.interceptor';
+import { LoadingService } from '../services/loading.service';
+import { withLoadingInterceptor } from './loading.interceptor';
 
-describe('loadingInterceptor', () => {
-    const interceptor: HttpInterceptorFn = (req, next) =>
-        TestBed.runInInjectionContext(() => loadingInterceptor(req, next));
+describe('withLoadingInterceptor', () => {
+    let loadingService: LoadingService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
+        loadingService = TestBed.inject(LoadingService);
     });
 
-    it('should be created', () => {
-        expect(interceptor).toBeTruthy();
+    it('should toggle the loading state around the source observable', () => {
+        expect(loadingService.isLoading()).toBe(false);
+
+        of('value').pipe(withLoadingInterceptor(loadingService)).subscribe();
+
+        expect(loadingService.isLoading()).toBe(false);
     });
 });

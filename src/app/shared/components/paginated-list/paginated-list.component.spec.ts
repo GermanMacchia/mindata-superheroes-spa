@@ -13,6 +13,7 @@ describe('PaginatedListComponent', () => {
 
         fixture = TestBed.createComponent(PaginatedListComponent);
         component = fixture.componentInstance;
+        fixture.componentRef.setInput('total', 0);
         await fixture.whenStable();
     });
 

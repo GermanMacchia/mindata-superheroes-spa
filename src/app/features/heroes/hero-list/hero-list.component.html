@@ -1,10 +1,12 @@
-<div class="hero-list">
-    @for (hero of heroes(); track hero.id) {
-        <app-card
-            [hero]="hero"
-            (edit)="onEdit($event)"
-            (delete)="onDelete($event)"
-            (viewHistory)="onViewHistory($event)"
-        />
-    }
-</div>
+<app-paginated-list [total]="total()" [pageIndex]="pageIndex()" [pageSize]="pageSize()" (pageChange)="onPageChange($event)">
+    <div class="hero-list">
+        @for (hero of heroes(); track hero.id) {
+            <app-card
+                [hero]="hero"
+                (edit)="onEdit($event)"
+                (delete)="onDelete($event)"
+                (viewHistory)="onViewHistory($event)"
+            />
+        }
+    </div>
+</app-paginated-list>
