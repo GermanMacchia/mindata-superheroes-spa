@@ -24,9 +24,13 @@ describe('HeroListComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should render one app-card per hero from HeroService', () => {
+    it('should render one app-card per hero on the current page', async () => {
+        // MockApiService simula latencia de red (300ms), esperamos que resuelva.
+        await new Promise((resolve) => setTimeout(resolve, 350));
+        await fixture.whenStable();
+
         const cards = fixture.debugElement.queryAll(By.directive(CardComponent));
 
-        expect(cards.length).toBe(HEROES_SEED.length);
+        expect(cards.length).toBe(Math.min(HEROES_SEED.length, component.pageSize()));
     });
 });
