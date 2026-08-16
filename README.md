@@ -101,13 +101,22 @@ src/app/
 Los estilos propios de cada componente (`.scss`) siguen notación **BEM** (`bloque__elemento--modificador`), con el bloque nombrado según el selector del componente. Ejemplo, para `HeroCardComponent`:
 
 ```scss
-.hero-card { }
-.hero-card__title { }
-.hero-card__actions { }
-.hero-card--selected { }
+.hero-card {
+}
+.hero-card__title {
+}
+.hero-card__actions {
+}
+.hero-card--selected {
+}
 ```
 
-Esto evita colisiones de clases entre componentes y mantiene legible el árbol de estilos sin depender de `::ng-deep` ni de encapsulación desactivada.
+Angular ya aísla los estilos de cada componente mediante encapsulación de vistas (por defecto), por lo que las colisiones de clases entre componentes no son un problema en sí mismo. Aun así, se adoptó BEM porque:
+
+- Mejora la legibilidad del árbol de estilos: con solo ver una clase (`hero-card__actions`) se identifica a qué bloque pertenece y qué rol cumple.
+- Evita anidamientos profundos de Sass que generan selectores con especificidad alta y difíciles de sobreescribir.
+- Da consistencia si algún estilo termina siendo compartido o global, donde pueden existir colisiones.
+- Mantiene el código preparado por si en algún caso puntual se desactiva la encapsulación (`ViewEncapsulation.None`), evitando depender de `::ng-deep`.
 
 ## Esquema de comunicación
 
@@ -166,6 +175,10 @@ export interface SuperHero {
 ```
 
 `history` es el contenido que despliega `HeroDetailComponent` en la ruta `/heroes/:id` — es campo obligatorio porque sin él la ruta de detalle no tendría nada propio que mostrar más allá de lo que ya se ve en la card.
+
+## Datos iniciales (seed)
+
+`heroes.seed.ts` (`features/heroes/data/`) precarga 10 héroes para que el CRUD tenga contenido desde el primer render, sin depender de un backend: 9 reales (Superman, Batman, Spider-Man, Wonder Woman, Iron Man, The Flash, Hulk, Captain America, Aquaman) y 1 inventado (Centella, sin `imageUrl`, para probar el fallback a `no-photo.webp`). `createdAt`/`updatedAt` se generan con la fecha actual al levantar la app.
 
 ## Instalación y ejecución
 
