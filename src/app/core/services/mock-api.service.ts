@@ -1,12 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable, delay, of } from 'rxjs';
 
+import { withLoadingInterceptor } from '../interceptors/loading.interceptor';
 import { PagedResult } from '../models/paged-result.model';
+import { LoadingService } from './loading.service';
+
+const SIMULATED_LATENCY_MS = 300;
 
 @Injectable({
     providedIn: 'root',
 })
 export class MockApiService {
+    private readonly loadingService = inject(LoadingService);
     private readonly collections = new Map<string, unknown[]>();
 
     seed<T>(resource: string, data: readonly T[]): void {
@@ -21,6 +26,6 @@ export class MockApiService {
             total: data.length,
             offset,
             limit,
-        });
+        }).pipe(delay(SIMULATED_LATENCY_MS), withLoadingInterceptor(this.loadingService));
     }
 }
