@@ -190,8 +190,14 @@ ng serve
 ## Tests y cobertura
 
 ```bash
-ng test --code-coverage
+ng test --coverage
 ```
+
+Para chequear el porcentaje total mirar la primera fila.
+
+| File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+| --------- | ------- | -------- | ------- | ------- | ----------------- |
+| All files | 90.05   | 95.1     | 78.26   | 89.13   |
 
 ## Docker
 
