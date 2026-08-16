@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject, debounceTime } from 'rxjs';
@@ -20,13 +20,13 @@ const PAGE_CHANGE_DEBOUNCE_MS = 250;
 })
 export class HeroListComponent {
     private readonly heroService = inject(HeroService);
+    private readonly destroyRef = inject(DestroyRef);
 
     readonly pageIndex = signal(0);
     readonly pageSize = signal(DEFAULT_PAGE_SIZE);
     readonly heroes = signal<SuperHero[]>([]);
     readonly total = signal(0);
 
-    // Debounce: clickear varias veces la paginación
     private readonly pageChange = new Subject<PageEvent>();
 
     constructor() {
@@ -60,10 +60,12 @@ export class HeroListComponent {
     private fetchData(): void {
         const offset = this.pageIndex() * this.pageSize();
 
-        // Sin unsubscribe: getHeroes() completa tras un solo emit
-        this.heroService.getHeroes(offset, this.pageSize()).subscribe((result) => {
-            this.heroes.set(result.items);
-            this.total.set(result.total);
-        });
+        this.heroService
+            .getHeroes(offset, this.pageSize())
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result) => {
+                this.heroes.set(result.items);
+                this.total.set(result.total);
+            });
     }
 }
