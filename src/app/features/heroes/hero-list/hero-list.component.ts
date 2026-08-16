@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
+import { Subject, debounceTime } from 'rxjs';
 
 import { SuperHero } from '@app/features/heroes/models/super-hero.model';
 import { CardComponent } from '@app/shared/components/card/card.component';
@@ -8,6 +10,7 @@ import { PaginatedListComponent } from '@app/shared/components/paginated-list/pa
 import { HeroService } from '../services/hero.service';
 
 const DEFAULT_PAGE_SIZE = 4;
+const PAGE_CHANGE_DEBOUNCE_MS = 250;
 
 @Component({
     selector: 'app-hero-list',
@@ -23,14 +26,23 @@ export class HeroListComponent {
     readonly heroes = signal<SuperHero[]>([]);
     readonly total = signal(0);
 
+    // Debounce: clickear varias veces la paginación
+    private readonly pageChange = new Subject<PageEvent>();
+
     constructor() {
         this.fetchData();
+
+        this.pageChange
+            .pipe(debounceTime(PAGE_CHANGE_DEBOUNCE_MS), takeUntilDestroyed())
+            .subscribe((event) => {
+                this.pageIndex.set(event.pageIndex);
+                this.pageSize.set(event.pageSize);
+                this.fetchData();
+            });
     }
 
     onPageChange(event: PageEvent): void {
-        this.pageIndex.set(event.pageIndex);
-        this.pageSize.set(event.pageSize);
-        this.fetchData();
+        this.pageChange.next(event);
     }
 
     onEdit(hero: SuperHero): void {
