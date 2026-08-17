@@ -26,6 +26,13 @@ export class HeroService {
         return this.mockApi.paginate<SuperHero>(RESOURCE, offset, limit, filter);
     }
 
+    createHero(data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>): Observable<SuperHero> {
+        const now = new Date();
+        const hero: SuperHero = { ...data, id: crypto.randomUUID(), createdAt: now, updatedAt: now };
+
+        return this.mockApi.create<SuperHero>(RESOURCE, hero);
+    }
+
     private matchesSearch(hero: SuperHero, term: string): boolean {
         return (
             hero.id.toLowerCase().includes(term) ||
