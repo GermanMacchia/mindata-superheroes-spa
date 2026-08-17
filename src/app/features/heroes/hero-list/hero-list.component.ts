@@ -65,18 +65,26 @@ export class HeroListComponent {
     }
 
     openCreateDialog(): void {
+        this.openHeroDialog();
+    }
+
+    onEdit(hero: SuperHero): void {
+        this.openHeroDialog(hero);
+    }
+
+    private openHeroDialog(hero?: SuperHero): void {
         this.dialog
-            .open(HeroFormComponent, { width: '600px' })
+            .open(HeroFormComponent, { width: '600px', data: hero })
             .afterClosed()
             .subscribe((result) => {
                 if (!result) return;
 
-                this.heroService.createHero(result).subscribe(() => this.fetchData());
-            });
-    }
+                const request = hero
+                    ? this.heroService.updateHero(hero.id, result)
+                    : this.heroService.createHero(result);
 
-    onEdit(hero: SuperHero): void {
-        console.log('editar', hero);
+                request.subscribe(() => this.fetchData());
+            });
     }
 
     onDelete(hero: SuperHero): void {

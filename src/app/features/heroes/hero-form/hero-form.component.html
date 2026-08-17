@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Crear superhéroe</h2>
+<h2 mat-dialog-title>{{ isEdit ? 'Editar superhéroe' : 'Crear superhéroe' }}</h2>
 
 <form class="hero-form" [formGroup]="form" (ngSubmit)="submit()">
     <mat-dialog-content class="hero-form__content">
@@ -48,6 +48,6 @@
 
     <mat-dialog-actions align="end">
         <button mat-button type="button" (click)="cancel()">Cancelar</button>
-        <button mat-flat-button type="submit">Crear</button>
+        <button mat-flat-button type="submit">{{ isEdit ? 'Guardar' : 'Crear' }}</button>
     </mat-dialog-actions>
 </form>

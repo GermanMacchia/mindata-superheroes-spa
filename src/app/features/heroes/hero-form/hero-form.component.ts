@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,16 +28,18 @@ type HeroFormResult = Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>;
 export class HeroFormComponent {
     private readonly fb = inject(FormBuilder);
     private readonly dialogRef = inject(MatDialogRef<HeroFormComponent, HeroFormResult>);
+    private readonly data = inject<SuperHero | undefined>(MAT_DIALOG_DATA, { optional: true });
 
+    readonly isEdit = !!this.data;
     readonly universes = ['Marvel', 'DC', 'Otro'];
 
     readonly form = this.fb.nonNullable.group({
-        name: ['', Validators.required],
-        realName: [''],
-        universe: this.fb.control<SuperHero['universe']>(undefined, Validators.required),
-        history: ['', Validators.required],
-        imageUrl: [''],
-        powers: [''],
+        name: [this.data?.name ?? '', Validators.required],
+        realName: [this.data?.realName ?? ''],
+        universe: this.fb.control<SuperHero['universe']>(this.data?.universe, Validators.required),
+        history: [this.data?.history ?? '', Validators.required],
+        imageUrl: [this.data?.imageUrl ?? ''],
+        powers: [this.data?.powers?.join(', ') ?? ''],
     });
 
     submit(): void {
