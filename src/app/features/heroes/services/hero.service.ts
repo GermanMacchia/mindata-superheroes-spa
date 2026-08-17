@@ -19,7 +19,20 @@ export class HeroService {
         this.mockApi.seed(RESOURCE, HEROES_SEED);
     }
 
-    getHeroes(offset: number, limit: number): Observable<PagedResult<SuperHero>> {
-        return this.mockApi.paginate<SuperHero>(RESOURCE, offset, limit);
+    getHeroes(offset: number, limit: number, search?: string): Observable<PagedResult<SuperHero>> {
+        const term = search?.trim().toLowerCase();
+        const filter = term ? (hero: SuperHero) => this.matchesSearch(hero, term) : undefined;
+
+        return this.mockApi.paginate<SuperHero>(RESOURCE, offset, limit, filter);
+    }
+
+    private matchesSearch(hero: SuperHero, term: string): boolean {
+        return (
+            hero.id.toLowerCase().includes(term) ||
+            hero.name.toLowerCase().includes(term) ||
+            !!hero.realName?.toLowerCase().includes(term) ||
+            !!hero.universe?.toLowerCase().includes(term) ||
+            !!hero.powers?.some((power) => power.toLowerCase().includes(term))
+        );
     }
 }
