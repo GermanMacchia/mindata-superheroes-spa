@@ -33,6 +33,13 @@ export class HeroService {
         return this.mockApi.create<SuperHero>(RESOURCE, hero);
     }
 
+    updateHero(
+        id: string,
+        data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>,
+    ): Observable<SuperHero> {
+        return this.mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
+    }
+
     private matchesSearch(hero: SuperHero, term: string): boolean {
         return (
             hero.id.toLowerCase().includes(term) ||
