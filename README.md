@@ -105,11 +105,9 @@ src/app/
 
 `HeroListComponent` guarda `pageIndex`, `pageSize`, `heroes` y `total` como signals. `fetchData()` calcula el `offset` a partir de la página actual, pide los datos y vuelca el resultado en `heroes`/`total`. `PaginatedListComponent` es puramente presentacional: recibe `total`/`pageIndex`/`pageSize`, muestra el paginador de Material, y emite `pageChange` cuando el usuario cambia de página — el listado en sí lo arma quien lo usa, proyectando contenido con `<ng-content>`.
 
-**Loading global:** `LoadingService` (`core/services/`) expone un signal booleano `isLoading` con `start()`/`stop()`. `withLoadingInterceptor` (`core/interceptors/loading.interceptor.ts`) es un operador de RxJS que se "pipea" a cualquier Observable async y llama `start()`/`stop()` automáticamente alrededor de él. `MockApiService.paginate()` lo usa junto con un `delay()` que simula latencia de red, para que el spinner (`mat-progress-spinner` en overlay, en `App`) sea visible al cambiar de página.
+**Loading global:** `LoadingService` (`core/services/`) expone un signal booleano `isLoading` con `start()`/`stop()`. `withLoadingInterceptor` (`core/interceptors/loading.interceptor.ts`) es un operador de RxJS que se incluye en el pipe de cualquier Observable async y llama `start()`/`stop()` automáticamente alrededor de él. `MockApiService.paginate()` lo usa junto con un `delay()` para simular latencia de red, haciendo que el spinner (`mat-progress-spinner` en overlay, en `App`) sea visible al cambiar de página.
 
 Para que el booleano nunca quede pisado por un pedido viejo, `HeroListComponent` aplica debounce a los cambios de página (`debounceTime` sobre un `Subject`) antes de disparar `fetchData()`: clickear la paginación varias veces seguidas dispara un solo pedido, no uno por click.
-
-**Nota de diseño — Empty State vs. Loading:** se incluye `empty-state` porque cubre un caso real e independiente del loading: cuando el filtro no arroja resultados (o no hay héroes cargados). El estado de carga en sí ya queda cubierto por el `LoadingService` + spinner global, por lo que no se agrega un componente skeleton — sumarlo sería redundante para el alcance de esta prueba.
 
 ### Convención de estilos
 
