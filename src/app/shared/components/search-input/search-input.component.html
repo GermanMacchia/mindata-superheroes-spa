@@ -1,1 +1,11 @@
-<p>search-input works!</p>
+<mat-form-field class="search-input" appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Buscar superhéroe</mat-label>
+    <input matInput type="text" [formControl]="control" />
+    <mat-icon matPrefix>search</mat-icon>
+    <mat-icon
+        matSuffix
+        matTooltip="Busca por id, universo, o coincidencia en nombre, nombre real o poderes"
+        aria-label="Información sobre la búsqueda"
+        >info</mat-icon
+    >
+</mat-form-field>
