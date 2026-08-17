@@ -4,7 +4,6 @@
     display: block;
     width: 100%;
     max-width: 16rem;
-    margin: 1.25rem;
 
     @include mat.form-field-overrides(
         (

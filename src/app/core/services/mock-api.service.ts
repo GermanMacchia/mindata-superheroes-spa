@@ -18,6 +18,14 @@ export class MockApiService {
         this.collections.set(resource, [...data]);
     }
 
+    create<T>(resource: string, item: T): Observable<T> {
+        const all = (this.collections.get(resource) as T[] | undefined) ?? [];
+        all.push(item);
+        this.collections.set(resource, all);
+
+        return of(item).pipe(delay(SIMULATED_LATENCY_MS), withLoadingInterceptor(this.loadingService));
+    }
+
     paginate<T>(
         resource: string,
         offset: number,

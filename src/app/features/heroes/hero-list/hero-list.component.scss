@@ -5,11 +5,25 @@
     min-height: 0;
 }
 
+.hero-list__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1.25rem;
+}
+
 .hero-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     padding: 1rem;
+}
+
+.hero-list__content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 @media (max-width: 900px) {

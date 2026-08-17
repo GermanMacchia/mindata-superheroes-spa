@@ -7,13 +7,6 @@
     min-height: 0;
 }
 
-.paginated-list__content {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    scrollbar-gutter: stable;
-}
-
 .paginated-list__paginator {
     flex: 0 0 auto;
     display: flex;

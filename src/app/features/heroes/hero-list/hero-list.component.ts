@@ -1,5 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject, debounceTime } from 'rxjs';
 
@@ -8,6 +11,7 @@ import { CardComponent } from '@app/shared/components/card/card.component';
 import { PaginatedListComponent } from '@app/shared/components/paginated-list/paginated-list.component';
 import { SearchInputComponent } from '@app/shared/components/search-input/search-input.component';
 
+import { HeroFormComponent } from '../hero-form/hero-form.component';
 import { HeroService } from '../services/hero.service';
 
 const DEFAULT_PAGE_SIZE = 4;
@@ -15,13 +19,20 @@ const PAGE_CHANGE_DEBOUNCE_MS = 250;
 
 @Component({
     selector: 'app-hero-list',
-    imports: [CardComponent, PaginatedListComponent, SearchInputComponent],
+    imports: [
+        CardComponent,
+        PaginatedListComponent,
+        SearchInputComponent,
+        MatButtonModule,
+        MatIconModule,
+    ],
     templateUrl: './hero-list.component.html',
     styleUrl: './hero-list.component.scss',
 })
 export class HeroListComponent {
     private readonly heroService = inject(HeroService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly dialog = inject(MatDialog);
 
     readonly pageIndex = signal(0);
     readonly pageSize = signal(DEFAULT_PAGE_SIZE);
@@ -51,6 +62,17 @@ export class HeroListComponent {
         this.searchTerm.set(term);
         this.pageIndex.set(0);
         this.fetchData();
+    }
+
+    openCreateDialog(): void {
+        this.dialog
+            .open(HeroFormComponent, { width: '600px' })
+            .afterClosed()
+            .subscribe((result) => {
+                if (!result) return;
+
+                this.heroService.createHero(result).subscribe(() => this.fetchData());
+            });
     }
 
     onEdit(hero: SuperHero): void {
