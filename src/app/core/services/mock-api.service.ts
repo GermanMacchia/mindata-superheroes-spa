@@ -23,17 +23,40 @@ export class MockApiService {
         all.push(item);
         this.collections.set(resource, all);
 
-        return of(item).pipe(delay(SIMULATED_LATENCY_MS), withLoadingInterceptor(this.loadingService));
+        return of(item).pipe(
+            delay(SIMULATED_LATENCY_MS),
+            withLoadingInterceptor(this.loadingService),
+        );
     }
 
-    update<T extends { id: string }>(resource: string, id: string, patch: Partial<T>): Observable<T> {
+    update<T extends { id: string }>(
+        resource: string,
+        id: string,
+        patch: Partial<T>,
+    ): Observable<T> {
         const all = (this.collections.get(resource) as T[] | undefined) ?? [];
         const index = all.findIndex((item) => item.id === id);
         const updated = { ...all[index], ...patch } as T;
         all[index] = updated;
         this.collections.set(resource, all);
 
-        return of(updated).pipe(delay(SIMULATED_LATENCY_MS), withLoadingInterceptor(this.loadingService));
+        return of(updated).pipe(
+            delay(SIMULATED_LATENCY_MS),
+            withLoadingInterceptor(this.loadingService),
+        );
+    }
+
+    delete<T extends { id: string }>(resource: string, id: string): Observable<void> {
+        const all = (this.collections.get(resource) as T[] | undefined) ?? [];
+        this.collections.set(
+            resource,
+            all.filter((item) => item.id !== id),
+        );
+
+        return of(undefined).pipe(
+            delay(SIMULATED_LATENCY_MS),
+            withLoadingInterceptor(this.loadingService),
+        );
     }
 
     paginate<T>(

@@ -8,6 +8,7 @@ import { Subject, debounceTime } from 'rxjs';
 
 import { SuperHero } from '@app/features/heroes/models/super-hero.model';
 import { CardComponent } from '@app/shared/components/card/card.component';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { PaginatedListComponent } from '@app/shared/components/paginated-list/paginated-list.component';
 import { SearchInputComponent } from '@app/shared/components/search-input/search-input.component';
 
@@ -88,7 +89,20 @@ export class HeroListComponent {
     }
 
     onDelete(hero: SuperHero): void {
-        console.log('borrar', hero);
+        this.dialog
+            .open(ConfirmDialogComponent, {
+                width: '400px',
+                data: {
+                    title: 'Eliminar superhéroe',
+                    message: `¿Seguro que querés eliminar a ${hero.name}? Esta acción no se puede deshacer.`,
+                },
+            })
+            .afterClosed()
+            .subscribe((confirmed) => {
+                if (!confirmed) return;
+
+                this.heroService.deleteHero(hero.id).subscribe(() => this.fetchData());
+            });
     }
 
     onViewHistory(hero: SuperHero): void {

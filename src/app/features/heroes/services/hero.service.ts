@@ -28,7 +28,12 @@ export class HeroService {
 
     createHero(data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>): Observable<SuperHero> {
         const now = new Date();
-        const hero: SuperHero = { ...data, id: crypto.randomUUID(), createdAt: now, updatedAt: now };
+        const hero: SuperHero = {
+            ...data,
+            id: crypto.randomUUID(),
+            createdAt: now,
+            updatedAt: now,
+        };
 
         return this.mockApi.create<SuperHero>(RESOURCE, hero);
     }
@@ -38,6 +43,10 @@ export class HeroService {
         data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>,
     ): Observable<SuperHero> {
         return this.mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
+    }
+
+    deleteHero(id: string): Observable<void> {
+        return this.mockApi.delete<SuperHero>(RESOURCE, id);
     }
 
     private matchesSearch(hero: SuperHero, term: string): boolean {
