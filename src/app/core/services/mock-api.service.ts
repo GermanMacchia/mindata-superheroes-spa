@@ -18,8 +18,14 @@ export class MockApiService {
         this.collections.set(resource, [...data]);
     }
 
-    paginate<T>(resource: string, offset: number, limit: number): Observable<PagedResult<T>> {
-        const data = (this.collections.get(resource) as T[] | undefined) ?? [];
+    paginate<T>(
+        resource: string,
+        offset: number,
+        limit: number,
+        filter?: (item: T) => boolean,
+    ): Observable<PagedResult<T>> {
+        const all = (this.collections.get(resource) as T[] | undefined) ?? [];
+        const data = filter ? all.filter(filter) : all;
 
         return of({
             items: data.slice(offset, offset + limit),
