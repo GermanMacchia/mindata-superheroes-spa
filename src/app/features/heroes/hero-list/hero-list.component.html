@@ -1,19 +1,27 @@
-<app-search-input (search)="onSearch($event)" />
-
-<app-paginated-list
-    [total]="total()"
-    [pageIndex]="pageIndex()"
-    [pageSize]="pageSize()"
-    (pageChange)="onPageChange($event)"
->
-    <div class="hero-list">
-        @for (hero of heroes(); track hero.id) {
-            <app-card
-                [hero]="hero"
-                (edit)="onEdit($event)"
-                (delete)="onDelete($event)"
-                (viewHistory)="onViewHistory($event)"
-            />
-        }
+<div class="hero-list__content">
+    <div class="hero-list__toolbar">
+        <app-search-input (search)="onSearch($event)" />
+        <button mat-flat-button (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            Crear superhéroe
+        </button>
     </div>
-</app-paginated-list>
+
+    <app-paginated-list
+        [total]="total()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        (pageChange)="onPageChange($event)"
+    >
+        <div class="hero-list">
+            @for (hero of heroes(); track hero.id) {
+                <app-card
+                    [hero]="hero"
+                    (edit)="onEdit($event)"
+                    (delete)="onDelete($event)"
+                    (viewHistory)="onViewHistory($event)"
+                />
+            }
+        </div>
+    </app-paginated-list>
+</div>
