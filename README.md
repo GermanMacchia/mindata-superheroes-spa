@@ -203,6 +203,19 @@ export interface SuperHero {
 
 `heroes.seed.ts` (`features/heroes/data/`) precarga 10 héroes para que el CRUD tenga contenido desde el primer render, sin depender de un backend: 9 reales (Superman, Batman, Spider-Man, Wonder Woman, Iron Man, The Flash, Hulk, Captain America, Aquaman) y 1 inventado (Centella, sin `imageUrl`, para probar el fallback a `no-photo.webp`). `createdAt`/`updatedAt` se generan con la fecha actual al levantar la app.
 
+Las imágenes (`imageUrl`) se toman de [akabab/superhero-api](https://akabab.github.io/superhero-api/), servidas vía jsDelivr. Para agregar un héroe nuevo al seed, el formato es `https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/<id>-<slug>.jpg`. Ejemplos:
+
+- Thor: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/659-thor.jpg
+- Wolverine: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/717-wolverine.jpg
+- Deadpool: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/213-deadpool.jpg
+- Pantera Negra: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/106-black-panther.jpg
+- Viuda Negra: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/107-black-widow.jpg
+- Linterna Verde: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/298-green-lantern.jpg
+- Doctor Strange: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/226-doctor-strange.jpg
+- Daredevil: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/201-daredevil.jpg
+- Cyborg: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/194-cyborg.jpg
+- Flecha Verde: https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/294-green-arrow.jpg
+
 ## Instalación y ejecución
 
 ```bash
