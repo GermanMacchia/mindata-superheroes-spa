@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UppercaseDirective } from './uppercase.directive';
@@ -13,10 +13,10 @@ class InputHostComponent {
 
 @Component({
     imports: [UppercaseDirective],
-    template: `<span [appUppercase]="text"></span>`,
+    template: `<span [appUppercase]="text()"></span>`,
 })
 class TextHostComponent {
-    text = '';
+    text = signal('');
 }
 
 describe('UppercaseDirective', () => {
@@ -45,7 +45,7 @@ describe('UppercaseDirective', () => {
     it('should uppercase a non-input element text content on init', () => {
         TestBed.configureTestingModule({ imports: [TextHostComponent] });
         const fixture: ComponentFixture<TextHostComponent> = TestBed.createComponent(TextHostComponent);
-        fixture.componentInstance.text = 'thor';
+        fixture.componentInstance.text.set('thor');
         fixture.detectChanges();
 
         const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
@@ -55,10 +55,10 @@ describe('UppercaseDirective', () => {
     it('should update a non-input element text content when the bound value changes', () => {
         TestBed.configureTestingModule({ imports: [TextHostComponent] });
         const fixture: ComponentFixture<TextHostComponent> = TestBed.createComponent(TextHostComponent);
-        fixture.componentInstance.text = 'thor';
+        fixture.componentInstance.text.set('thor');
         fixture.detectChanges();
 
-        fixture.componentInstance.text = 'loki';
+        fixture.componentInstance.text.set('loki');
         fixture.detectChanges();
 
         const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
