@@ -41,8 +41,6 @@ src/app/
 │   │   └── loading.interceptor.ts
 │   ├── guards/
 │   │   └── auth.guard.ts
-│   ├── directives/
-│   │   └── uppercase.directive.ts
 │   ├── models/
 │   │   └── paged-result.model.ts
 │   └── services/
@@ -70,7 +68,8 @@ src/app/
 │       │   └── hero-list.component.spec.ts
 │       ├── hero-detail/
 │       │   ├── hero-detail.component.ts
-│       │   └── hero-detail.component.spec.ts
+│       │   ├── hero-detail.component.spec.ts
+│       │   └── hero.resolver.ts
 │       └── hero-form/
 │           ├── hero-form.component.ts       # se abre vía MatDialog, no es ruta
 │           └── hero-form.component.spec.ts
@@ -94,12 +93,15 @@ src/app/
 │   │   └── empty-state/
 │   │       ├── empty-state.component.ts
 │   │       └── empty-state.component.spec.ts
+│   ├── directives/
+│   │   ├── uppercase.directive.ts
+│   │   └── uppercase.directive.spec.ts
 │   └── pipes/
 │       └── (pipes reutilizables, si surgen)
 └── app.routes.ts
 ```
 
-**Regla de dependencia:** los componentes de `features/heroes` solo conocen al `HeroService` y al modelo `SuperHero`; nunca acceden directamente al seed de datos. `core/` contiene piezas transversales (interceptor, guard, directiva, y ahora el `MockApiService` + `PagedResult<T>`) que no dependen de ninguna feature. `shared/` contiene componentes de presentación puros (cards, listas paginadas genéricas, buscador, diálogo de confirmación) sin lógica de negocio — reciben datos por `@Input()` y emiten eventos por `@Output()`, para poder reutilizarse tanto en `heroes` como en cualquier feature futura.
+**Regla de dependencia:** los componentes de `features/heroes` solo conocen al `HeroService` y al modelo `SuperHero`; nunca acceden directamente al seed de datos. `core/` contiene piezas transversales (interceptor, guard, el `MockApiService` + `PagedResult<T>`) que no dependen de ninguna feature. `shared/` contiene componentes de presentación puros (cards, listas paginadas genéricas, buscador, diálogo de confirmación) sin lógica de negocio — reciben datos por `@Input()` y emiten eventos por `@Output()`, para poder reutilizarse tanto en `heroes` como en cualquier feature futura.
 
 **Paginación server-driven:** `MockApiService` (`core/services/`) funciona como un backend en memoria. Guarda los datos en colecciones nombradas y expone `paginate<T>(resource, offset, limit): Observable<PagedResult<T>>`, que devuelve `{ items, total, offset, limit }` — la misma forma que devolvería un endpoint REST paginado real. `HeroService` siembra `HEROES_SEED` bajo el nombre `'heroes'` una sola vez y expone `getHeroes(offset, limit)`, que delega en `MockApiService.paginate()`.
 
