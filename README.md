@@ -4,7 +4,7 @@ Aplicación SPA de mantenimiento (CRUD) de súper héroes, desarrollada como pru
 
 ## Idea inicial del proyecto
 
-La aplicación permite registrar, consultar, filtrar, editar y eliminar súper héroes desde una interfaz paginada, sin depender de un backend real: toda la información se gestiona en memoria a través de un servicio Angular que expone un CRUD completo mediante programación reactiva (RxJS). El alta y la edición se resuelven en un modal (`HeroFormComponent` vía `MatDialog`), mientras que cada card navega a la ruta de detalle del héroe (`/heroes/:id`), donde se despliega su historia completa. Incluye además una pantalla de login (autenticación mock en memoria) que protege el acceso al mantenimiento de héroes mediante un `AuthGuard`, y un set de componentes reutilizables en `shared/` (cards, listas paginadas, buscador) para no repetir UI entre features.
+La aplicación permite registrar, consultar, filtrar, editar y eliminar súper héroes desde una interfaz paginada, sin depender de un backend real: toda la información se gestiona en memoria a través de un servicio Angular que expone un CRUD completo mediante programación reactiva (RxJS). El alta y la edición se resuelven en un modal (`HeroFormComponent` vía `MatDialog`), mientras que cada card navega a la ruta de detalle del héroe (`/heroe/:id`), donde se despliega su historia completa. Incluye además una pantalla de login (autenticación mock en memoria) que protege el acceso al mantenimiento de héroes mediante un `AuthGuard`, y un set de componentes reutilizables en `shared/` (cards, listas paginadas, buscador) para no repetir UI entre features.
 
 El objetivo no es solo cumplir el checklist funcional, sino demostrar:
 
@@ -157,7 +157,17 @@ El `AuthGuard` protege la ruta de `heroes` (`canActivate`); si no hay sesión ac
 | ------------- | --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
 | `/login`      | `LoginComponent`      | pública     | Autenticación mock en memoria                                                                               |
 | `/heroes`     | `HeroListComponent`   | `AuthGuard` | Listado paginado/filtrado; alta y edición se abren como modal (`HeroFormComponent`), no navegan a otra ruta |
-| `/heroes/:id` | `HeroDetailComponent` | `AuthGuard` | Detalle del héroe (historia, poderes, universo); se llega haciendo click en la card desde el listado        |
+| `/heroe/:id`  | `HeroDetailComponent` | `AuthGuard` | Detalle del héroe (historia, poderes, universo); se llega haciendo click en la card desde el listado        |
+
+### Resolver de detalle
+
+La ruta `/heroe/:id` resuelve el héroe **antes** de activar el componente, con un `ResolveFn` (`hero.resolver.ts`) registrado en `app.routes.ts` (`resolve: { hero: heroResolver }`). Gracias a `withComponentInputBinding()` (en `app.config.ts`), el dato resuelto llega directo al `input.required<SuperHero>()` del componente, sin `ActivatedRoute` ni suscripciones manuales. Si el id no existe, redirige a `/heroes`.
+
+Ejemplo, para ver el detalle de Superman:
+
+```
+/heroe/b1f3a2c0-1a2b-4c3d-9e4f-000000000001
+```
 
 ## Referencia de diseño
 
@@ -187,7 +197,7 @@ export interface SuperHero {
 }
 ```
 
-`history` es el contenido que despliega `HeroDetailComponent` en la ruta `/heroes/:id` — es campo obligatorio porque sin él la ruta de detalle no tendría nada propio que mostrar más allá de lo que ya se ve en la card.
+`history` es el contenido que despliega `HeroDetailComponent` en la ruta `/heroe/:id` — es campo obligatorio porque sin él la ruta de detalle no tendría nada propio que mostrar más allá de lo que ya se ve en la card.
 
 ## Datos iniciales (seed)
 
@@ -214,7 +224,7 @@ Para chequear el porcentaje total mirar la primera fila.
 
 ## Docker
 
-Build multi-stage: compila con Node y sirve el resultado con Nginx (`nginx.conf` incluye el fallback a `index.html` que necesita el router de Angular para rutas como `/heroes/:id`).
+Build multi-stage: compila con Node y sirve el resultado con Nginx (`nginx.conf` incluye el fallback a `index.html` que necesita el router de Angular para rutas como `/heroe/:id`).
 
 ```bash
 docker build -t mindata-superheroes-spa .
