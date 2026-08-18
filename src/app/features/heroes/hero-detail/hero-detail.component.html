@@ -1,1 +1,35 @@
-<p>hero-detail works!</p>
+<div class="hero-detail-page">
+    <button mat-icon-button class="hero-detail__back" aria-label="Volver" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="hero-detail">
+        <img
+            class="hero-detail__image"
+            role="img"
+            [src]="hero().imageUrl || '/no-photo.webp'"
+            [alt]="hero().name"
+        />
+
+        <div class="hero-detail__content">
+            <h1 class="hero-detail__name" appUppercase>{{ hero().name }}</h1>
+            @if (hero().realName) {
+                <p class="hero-detail__real-name">{{ hero().realName }}</p>
+            }
+            @if (hero().universe) {
+                <p class="hero-detail__universe">{{ hero().universe }}</p>
+            }
+
+            @if (hero().powers?.length) {
+                <mat-chip-set class="hero-detail__powers">
+                    @for (power of hero().powers; track power) {
+                        <mat-chip>{{ power }}</mat-chip>
+                    }
+                </mat-chip-set>
+            }
+
+            <h2 class="hero-detail__history-title">Historia</h2>
+            <p class="hero-detail__history">{{ hero().history }}</p>
+        </div>
+    </div>
+</div>
