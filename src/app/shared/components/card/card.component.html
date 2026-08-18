@@ -7,7 +7,7 @@
     />
 
     <mat-card-header>
-        <mat-card-title class="card__title" appUppercase>{{ hero().name }}</mat-card-title>
+        <mat-card-title class="card__title" [appUppercase]="hero().name"></mat-card-title>
         @if (hero().realName) {
             <mat-card-subtitle class="card__subtitle">{{ hero().realName }}</mat-card-subtitle>
         }

@@ -12,7 +12,7 @@
         />
 
         <div class="hero-detail__content">
-            <h1 class="hero-detail__name" appUppercase>{{ hero().name }}</h1>
+            <h1 class="hero-detail__name" [appUppercase]="hero().name"></h1>
             @if (hero().realName) {
                 <p class="hero-detail__real-name">{{ hero().realName }}</p>
             }

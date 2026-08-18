@@ -13,7 +13,7 @@ class InputHostComponent {
 
 @Component({
     imports: [UppercaseDirective],
-    template: `<span appUppercase>{{ text }}</span>`,
+    template: `<span [appUppercase]="text"></span>`,
 })
 class TextHostComponent {
     text = '';
@@ -30,16 +30,6 @@ describe('UppercaseDirective', () => {
         expect(input.value).toBe('HULK');
     });
 
-    it('should uppercase a non-input element text content on init', () => {
-        TestBed.configureTestingModule({ imports: [TextHostComponent] });
-        const fixture: ComponentFixture<TextHostComponent> = TestBed.createComponent(TextHostComponent);
-        fixture.componentInstance.text = 'thor';
-        fixture.detectChanges();
-
-        const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
-        expect(span.textContent).toBe('THOR');
-    });
-
     it('should uppercase the value as the user types', () => {
         TestBed.configureTestingModule({ imports: [InputHostComponent] });
         const fixture: ComponentFixture<InputHostComponent> = TestBed.createComponent(InputHostComponent);
@@ -50,5 +40,28 @@ describe('UppercaseDirective', () => {
         input.dispatchEvent(new Event('input'));
 
         expect(input.value).toBe('LOKI');
+    });
+
+    it('should uppercase a non-input element text content on init', () => {
+        TestBed.configureTestingModule({ imports: [TextHostComponent] });
+        const fixture: ComponentFixture<TextHostComponent> = TestBed.createComponent(TextHostComponent);
+        fixture.componentInstance.text = 'thor';
+        fixture.detectChanges();
+
+        const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
+        expect(span.textContent).toBe('THOR');
+    });
+
+    it('should update a non-input element text content when the bound value changes', () => {
+        TestBed.configureTestingModule({ imports: [TextHostComponent] });
+        const fixture: ComponentFixture<TextHostComponent> = TestBed.createComponent(TextHostComponent);
+        fixture.componentInstance.text = 'thor';
+        fixture.detectChanges();
+
+        fixture.componentInstance.text = 'loki';
+        fixture.detectChanges();
+
+        const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
+        expect(span.textContent).toBe('LOKI');
     });
 });
