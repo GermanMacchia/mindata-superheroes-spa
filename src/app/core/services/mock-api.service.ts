@@ -59,6 +59,15 @@ export class MockApiService {
         );
     }
 
+    getById<T extends { id: string }>(resource: string, id: string): Observable<T | undefined> {
+        const all = (this.collections.get(resource) as T[] | undefined) ?? [];
+
+        return of(all.find((item) => item.id === id)).pipe(
+            delay(SIMULATED_LATENCY_MS),
+            withLoadingInterceptor(this.loadingService),
+        );
+    }
+
     paginate<T>(
         resource: string,
         offset: number,
