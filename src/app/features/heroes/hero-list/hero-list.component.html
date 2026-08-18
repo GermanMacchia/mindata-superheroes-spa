@@ -13,15 +13,22 @@
         [pageSize]="pageSize()"
         (pageChange)="onPageChange($event)"
     >
-        <div class="hero-list">
-            @for (hero of heroes(); track hero.id) {
-                <app-card
-                    [hero]="hero"
-                    (edit)="onEdit($event)"
-                    (delete)="onDelete($event)"
-                    (viewHistory)="onViewHistory($event)"
-                />
-            }
-        </div>
+        @if (noResults()) {
+            <app-empty-state
+                icon="search_off"
+                message="No se encontraron superhéroes que coincidan con tu búsqueda."
+            />
+        } @else {
+            <div class="hero-list">
+                @for (hero of heroes(); track hero.id) {
+                    <app-card
+                        [hero]="hero"
+                        (edit)="onEdit($event)"
+                        (delete)="onDelete($event)"
+                        (viewHistory)="onViewHistory($event)"
+                    />
+                }
+            </div>
+        }
     </app-paginated-list>
 </div>

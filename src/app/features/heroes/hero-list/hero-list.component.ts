@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { Subject, debounceTime } from 'rxjs';
 import { SuperHero } from '@app/features/heroes/models/super-hero.model';
 import { CardComponent } from '@app/shared/components/card/card.component';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
+import { EmptyStateComponent } from '@app/shared/components/empty-state/empty-state.component';
 import { PaginatedListComponent } from '@app/shared/components/paginated-list/paginated-list.component';
 import { SearchInputComponent } from '@app/shared/components/search-input/search-input.component';
 
@@ -23,6 +24,7 @@ const PAGE_CHANGE_DEBOUNCE_MS = 250;
     selector: 'app-hero-list',
     imports: [
         CardComponent,
+        EmptyStateComponent,
         PaginatedListComponent,
         SearchInputComponent,
         MatButtonModule,
@@ -42,6 +44,8 @@ export class HeroListComponent {
     readonly heroes = signal<SuperHero[]>([]);
     readonly total = signal(0);
     readonly searchTerm = signal('');
+
+    readonly noResults = computed(() => this.heroes().length === 0 && this.searchTerm().length > 0);
 
     private readonly pageChange = new Subject<PageEvent>();
 
