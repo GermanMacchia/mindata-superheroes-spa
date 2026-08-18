@@ -45,6 +45,10 @@ export class HeroService {
         return this.mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
     }
 
+    getHeroById(id: string): Observable<SuperHero | undefined> {
+        return this.mockApi.getById<SuperHero>(RESOURCE, id);
+    }
+
     deleteHero(id: string): Observable<void> {
         return this.mockApi.delete<SuperHero>(RESOURCE, id);
     }
