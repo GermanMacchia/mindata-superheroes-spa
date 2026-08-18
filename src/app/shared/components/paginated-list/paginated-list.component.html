@@ -1,0 +1,10 @@
+<ng-content />
+
+<mat-paginator
+    class="paginated-list__paginator"
+    [length]="total()"
+    [pageSize]="pageSize()"
+    [pageIndex]="pageIndex()"
+    [pageSizeOptions]="pageSizeOptions()"
+    (page)="onPage($event)"
+/>

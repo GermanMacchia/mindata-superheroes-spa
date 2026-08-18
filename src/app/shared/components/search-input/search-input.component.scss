@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+
+.search-input {
+    display: block;
+    width: 100%;
+    max-width: 16rem;
+
+    @include mat.form-field-overrides(
+        (
+            container-height: 40px,
+            container-vertical-padding: 8px,
+            outlined-container-shape: 12px,
+        )
+    );
+}

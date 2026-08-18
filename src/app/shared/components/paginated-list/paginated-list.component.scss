@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.paginated-list__paginator {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+
+    @include mat.paginator-overrides(
+        (
+            container-text-size: 1rem,
+            select-trigger-text-size: 1rem,
+        )
+    );
+}

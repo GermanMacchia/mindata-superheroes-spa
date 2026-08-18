@@ -1,0 +1,18 @@
+mat-toolbar {
+    background: var(--mat-sys-primary);
+    color: #fff;
+    padding: 0 1.75rem;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.user-email {
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+button {
+    color: #fff;
+}

@@ -1,0 +1,14 @@
+.hero-form {
+    display: flex;
+    flex-direction: column;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__field {
+        width: 100%;
+    }
+}
