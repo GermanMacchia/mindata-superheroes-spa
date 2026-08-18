@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
 
 import { SuperHero } from '@app/features/heroes/models/super-hero.model';
@@ -34,6 +35,7 @@ export class HeroListComponent {
     private readonly heroService = inject(HeroService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialog = inject(MatDialog);
+    private readonly router = inject(Router);
 
     readonly pageIndex = signal(0);
     readonly pageSize = signal(DEFAULT_PAGE_SIZE);
@@ -106,7 +108,7 @@ export class HeroListComponent {
     }
 
     onViewHistory(hero: SuperHero): void {
-        console.log('ver historia', hero);
+        this.router.navigate(['/heroe', hero.id]);
     }
 
     private fetchData(): void {
