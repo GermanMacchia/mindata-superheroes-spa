@@ -11,6 +11,7 @@ graph TD
         SP[PaginatedListComponent]
         SS[SearchInputComponent]
         SD[ConfirmDialogComponent]
+        G[UppercaseDirective]
     end
 
     subgraph "Dominio / Lógica de negocio"
@@ -21,7 +22,6 @@ graph TD
 
     subgraph "Infraestructura transversal"
         F[LoadingInterceptor]
-        G[UppercaseDirective]
         GD[AuthGuard]
     end
 
@@ -42,6 +42,8 @@ graph TD
     D -->|expone| E
     D -->|lee/escribe| H
     F -.->|intercepta llamadas| D
+    G -.->|aplica en| SC
+    G -.->|aplica en| HD
     G -.->|aplica en| B
     L -->|usa| AU
     GD -.->|protege ruta de| A
