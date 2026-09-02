@@ -122,6 +122,14 @@ export class HeroListComponent {
             .getHeroes(offset, this.pageSize(), this.searchTerm())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((result) => {
+                // La página actual quedó vacía (ej: se borró el único elemento restante).
+                // Retrocedemos a la última página con contenido y refetcheamos.
+                if (offset > 0 && offset >= result.total) {
+                    this.pageIndex.set(Math.max(0, Math.ceil(result.total / this.pageSize()) - 1));
+                    this.fetchData();
+                    return;
+                }
+
                 this.heroes.set(result.items);
                 this.total.set(result.total);
             });
