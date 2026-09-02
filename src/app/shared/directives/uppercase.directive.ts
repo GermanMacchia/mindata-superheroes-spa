@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Optional, Self } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Input, OnChanges } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -10,20 +10,18 @@ import { NgControl } from '@angular/forms';
 export class UppercaseDirective implements AfterViewInit, OnChanges {
     @Input() appUppercase = '';
 
-    constructor(
-        private el: ElementRef<HTMLElement>,
-        @Optional() @Self() private ngControl: NgControl,
-    ) { }
+    private readonly _el = inject(ElementRef<HTMLElement>);
+    private readonly _ngControl = inject(NgControl, { optional: true, self: true });
 
     ngAfterViewInit(): void {
-        const element = this.el.nativeElement;
+        const element = this._el.nativeElement;
         if (element instanceof HTMLInputElement) {
             this.applyUppercase(element, element.value);
         }
     }
 
     ngOnChanges(): void {
-        const element = this.el.nativeElement;
+        const element = this._el.nativeElement;
         if (!(element instanceof HTMLInputElement)) {
             element.textContent = this.appUppercase.toUpperCase();
         }
@@ -37,6 +35,6 @@ export class UppercaseDirective implements AfterViewInit, OnChanges {
     private applyUppercase(input: HTMLInputElement, value: string): void {
         const uppercasedValue = value.toUpperCase();
         input.value = uppercasedValue;
-        this.ngControl?.control?.setValue(uppercasedValue);
+        this._ngControl?.control?.setValue(uppercasedValue);
     }
 }
