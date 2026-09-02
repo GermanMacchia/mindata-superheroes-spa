@@ -41,4 +41,16 @@ describe('HeaderComponent', () => {
         expect(authService.isAuthenticated()).toBe(false);
         expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     });
+
+    it('should call logout when clicking the logout button', () => {
+        authService.login('test@mail.com', 'anything');
+        const fixture = TestBed.createComponent(HeaderComponent);
+        fixture.detectChanges();
+
+        const logoutButton: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+        logoutButton.click();
+
+        expect(authService.isAuthenticated()).toBe(false);
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+    });
 });
