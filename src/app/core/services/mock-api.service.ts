@@ -68,6 +68,15 @@ export class MockApiService {
         );
     }
 
+    exists<T>(resource: string, predicate: (item: T) => boolean): Observable<boolean> {
+        const all = (this.collections.get(resource) as T[] | undefined) ?? [];
+
+        return of(all.some(predicate)).pipe(
+            delay(SIMULATED_LATENCY_MS),
+            withLoadingInterceptor(this.loadingService),
+        );
+    }
+
     paginate<T>(
         resource: string,
         offset: number,
