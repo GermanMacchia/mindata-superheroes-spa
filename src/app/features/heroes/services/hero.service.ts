@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap, throwError } from 'rxjs';
 
 import { PagedResult } from '@app/core/models/paged-result.model';
 import { MockApiService } from '@app/core/services/mock-api.service';
@@ -26,23 +26,51 @@ export class HeroService {
         return this.mockApi.paginate<SuperHero>(RESOURCE, offset, limit, filter);
     }
 
-    createHero(data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>): Observable<SuperHero> {
-        const now = new Date();
-        const hero: SuperHero = {
-            ...data,
-            id: crypto.randomUUID(),
-            createdAt: now,
-            updatedAt: now,
-        };
+    nameExists(name: string, excludeId?: string): Observable<boolean> {
+        const normalized = name.trim().toLowerCase();
 
-        return this.mockApi.create<SuperHero>(RESOURCE, hero);
+        return this.mockApi.exists<SuperHero>(
+            RESOURCE,
+            (hero) => hero.id !== excludeId && hero.name.trim().toLowerCase() === normalized,
+        );
+    }
+
+    createHero(data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>): Observable<SuperHero> {
+        return this.nameExists(data.name).pipe(
+            switchMap((duplicate) => {
+                if (duplicate) {
+                    return throwError(() => new Error('Ya existe un héroe con ese nombre.'));
+                }
+
+                const now = new Date();
+                const hero: SuperHero = {
+                    ...data,
+                    id: crypto.randomUUID(),
+                    createdAt: now,
+                    updatedAt: now,
+                };
+
+                return this.mockApi.create<SuperHero>(RESOURCE, hero);
+            }),
+        );
     }
 
     updateHero(
         id: string,
         data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>,
     ): Observable<SuperHero> {
-        return this.mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
+        return this.nameExists(data.name, id).pipe(
+            switchMap((duplicate) => {
+                if (duplicate) {
+                    return throwError(() => new Error('Ya existe un héroe con ese nombre.'));
+                }
+
+                return this.mockApi.update<SuperHero>(RESOURCE, id, {
+                    ...data,
+                    updatedAt: new Date(),
+                });
+            }),
+        );
     }
 
     getHeroById(id: string): Observable<SuperHero | undefined> {
