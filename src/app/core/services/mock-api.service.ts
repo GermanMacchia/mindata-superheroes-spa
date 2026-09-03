@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
+import { Observable, delay, of, throwError } from 'rxjs';
 
 import { withLoadingInterceptor } from '../interceptors/loading.interceptor';
 import { PagedResult } from '../models/paged-result.model';
@@ -36,6 +36,13 @@ export class MockApiService {
     ): Observable<T> {
         const all = (this.collections.get(resource) as T[] | undefined) ?? [];
         const index = all.findIndex((item) => item.id === id);
+
+        if (index === -1) {
+            return throwError(() => new Error(`No se encontró "${resource}" con id "${id}"`)).pipe(
+                withLoadingInterceptor(this.loadingService),
+            );
+        }
+
         const updated = { ...all[index], ...patch } as T;
         all[index] = updated;
         this.collections.set(resource, all);
