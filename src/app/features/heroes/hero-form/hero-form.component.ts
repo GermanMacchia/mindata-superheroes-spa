@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { SuperHero } from '@app/features/heroes/models/super-hero.model';
+import { HeroService } from '@app/features/heroes/services/hero.service';
 import { UppercaseDirective } from '@app/shared/directives/uppercase.directive';
 
 type HeroFormResult = Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>;
@@ -29,6 +30,7 @@ export class HeroFormComponent {
     private readonly fb = inject(FormBuilder);
     private readonly dialogRef = inject(MatDialogRef<HeroFormComponent, HeroFormResult>);
     private readonly data = inject<SuperHero | undefined>(MAT_DIALOG_DATA, { optional: true });
+    private readonly heroService = inject(HeroService);
 
     readonly isEdit = !!this.data;
     readonly universes = ['Marvel', 'DC', 'Otro'];
@@ -50,18 +52,26 @@ export class HeroFormComponent {
 
         const { name, realName, universe, history, imageUrl, powers } = this.form.getRawValue();
 
-        this.dialogRef.close({
-            name,
-            realName: realName || 'Desconocido',
-            universe,
-            history,
-            imageUrl: imageUrl || undefined,
-            powers: powers
-                ? powers
-                      .split(',')
-                      .map((power) => power.trim())
-                      .filter(Boolean)
-                : undefined,
+        this.heroService.nameExists(name, this.data?.id).subscribe((duplicate) => {
+            if (duplicate) {
+                this.form.controls.name.setErrors({ duplicateName: true });
+                this.form.controls.name.markAsTouched();
+                return;
+            }
+
+            this.dialogRef.close({
+                name,
+                realName: realName || 'Desconocido',
+                universe,
+                history,
+                imageUrl: imageUrl || undefined,
+                powers: powers
+                    ? powers
+                          .split(',')
+                          .map((power) => power.trim())
+                          .filter(Boolean)
+                    : undefined,
+            });
         });
     }
 
