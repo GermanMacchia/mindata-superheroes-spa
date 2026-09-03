@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { UppercaseDirective } from './uppercase.directive';
 
@@ -17,6 +18,14 @@ class InputHostComponent {
 })
 class TextHostComponent {
     text = signal('');
+}
+
+@Component({
+    imports: [ReactiveFormsModule, UppercaseDirective],
+    template: `<input appUppercase [formControl]="control" />`,
+})
+class ReactiveFormHostComponent {
+    control = new FormControl('hulk', { nonNullable: true });
 }
 
 describe('UppercaseDirective', () => {
@@ -63,5 +72,28 @@ describe('UppercaseDirective', () => {
 
         const span: HTMLSpanElement = fixture.nativeElement.querySelector('span');
         expect(span.textContent).toBe('LOKI');
+    });
+
+    it('should sync the FormControl with the uppercased initial value', () => {
+        TestBed.configureTestingModule({ imports: [ReactiveFormHostComponent] });
+        const fixture: ComponentFixture<ReactiveFormHostComponent> = TestBed.createComponent(ReactiveFormHostComponent);
+        fixture.detectChanges();
+
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+        expect(input.value).toBe('HULK');
+        expect(fixture.componentInstance.control.value).toBe('HULK');
+    });
+
+    it('should sync the FormControl as the user types', () => {
+        TestBed.configureTestingModule({ imports: [ReactiveFormHostComponent] });
+        const fixture: ComponentFixture<ReactiveFormHostComponent> = TestBed.createComponent(ReactiveFormHostComponent);
+        fixture.detectChanges();
+
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+        input.value = 'loki';
+        input.dispatchEvent(new Event('input'));
+
+        expect(input.value).toBe('LOKI');
+        expect(fixture.componentInstance.control.value).toBe('LOKI');
     });
 });
