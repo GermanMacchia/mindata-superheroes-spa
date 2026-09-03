@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,12 +10,21 @@ import { UppercaseDirective } from '@app/shared/directives/uppercase.directive';
 
 @Component({
     selector: 'app-card',
-    imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, UppercaseDirective],
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        UppercaseDirective,
+        NgOptimizedImage,
+    ],
     templateUrl: './card.component.html',
     styleUrl: './card.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
     readonly hero = input.required<SuperHero>();
+    readonly priority = input(false);
 
     readonly edit = output<SuperHero>();
     readonly delete = output<SuperHero>();

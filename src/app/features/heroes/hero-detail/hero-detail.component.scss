@@ -1,25 +1,30 @@
 .hero-detail-page {
-    max-width: 960px;
+    max-width: 60rem;
     margin: 0 auto;
-    padding: 16px;
+    padding: 1rem;
 }
 
 .hero-detail__back {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
 .hero-detail {
     display: flex;
-    gap: 24px;
+    gap: 1.5rem;
+}
+
+.hero-detail__image-wrapper {
+    position: relative;
+    flex: 0 0 20rem;
+    align-self: flex-start;
+    width: 20rem;
+    aspect-ratio: 3 / 4;
+    max-height: 70vh;
 }
 
 .hero-detail__image {
-    flex: 0 0 320px;
-    align-self: flex-start;
-    width: 320px;
-    max-height: 70vh;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 0.5rem;
 }
 
 .hero-detail__content {
@@ -33,12 +38,12 @@
 
 .hero-detail__real-name,
 .hero-detail__universe {
-    margin: 4px 0;
+    margin: 0.25rem 0;
     opacity: 0.7;
 }
 
 .hero-detail__powers {
-    margin: 16px 0;
+    margin: 1rem 0;
 }
 
 .hero-detail__history {
@@ -50,11 +55,11 @@
         flex-direction: column;
     }
 
-    .hero-detail__image {
+    .hero-detail__image-wrapper {
         width: 100%;
     }
 
     .hero-detail__content {
-        padding-top: 8px;
+        padding-top: 0.5rem;
     }
 }

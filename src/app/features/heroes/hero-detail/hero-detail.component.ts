@@ -1,4 +1,5 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,16 +10,17 @@ import { UppercaseDirective } from '@app/shared/directives/uppercase.directive';
 
 @Component({
     selector: 'app-hero-detail',
-    imports: [MatButtonModule, MatIconModule, MatChipsModule, UppercaseDirective],
+    imports: [MatButtonModule, MatIconModule, MatChipsModule, UppercaseDirective, NgOptimizedImage],
     templateUrl: './hero-detail.component.html',
     styleUrl: './hero-detail.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroDetailComponent {
-    private readonly router = inject(Router);
+    private readonly _router = inject(Router);
 
     readonly hero = input.required<SuperHero>();
 
     goBack(): void {
-        this.router.navigate(['/heroes']);
+        this._router.navigate(['/heroes']);
     }
 }

@@ -23,7 +23,7 @@ El objetivo no es solo cumplir el checklist funcional, sino demostrar:
 | Angular CDK      | 21.x                             | Utilidades de layout, overlay (diálogos) y accesibilidad, base de Angular Material                                                                |
 | RxJS             | ^7.4.0                           | Programación reactiva en el servicio y en los componentes                                                                                         |
 | TypeScript       | Última compatible con Angular 21 | Tipado estricto del modelo de datos                                                                                                               |
-| Jasmine / Karma  | Incluidos en Angular CLI         | Testing unitario                                                                                                                                  |
+| Vitest           | ^4.0.8                           | Testing unitario, vía `@angular/build:unit-test`                                                                                                  |
 | Docker + Nginx   | —                                | Contenedorización y servido del build de producción                                                                                               |
 
 ## Arquitectura del proyecto
@@ -151,7 +151,7 @@ Angular ya aísla los estilos de cada componente mediante encapsulación de vist
 
 ![Login y protección de rutas con Guard](docs/comunicacion-log-guard.svg)
 
-El `AuthGuard` protege la ruta de `heroes` (`canActivate`); si no hay sesión activa, redirige a `/login`. La autenticación también es en memoria (usuario/clave hardcodeados: `admin` / `admin`), consistente con el resto del proyecto: sin backend real.
+El `AuthGuard` protege la ruta de `heroes` (`canActivate`); si no hay sesión activa, redirige a `/login`. La autenticación también es en memoria: `AuthService.login()` acepta cualquier combinación de email/contraseña no vacía (no valida credenciales contra un usuario fijo), consistente con el resto del proyecto: sin backend real.
 
 ### Rutas
 

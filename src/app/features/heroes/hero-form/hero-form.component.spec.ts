@@ -5,6 +5,8 @@ import { Mock, vi } from 'vitest';
 import { HeroFormComponent } from './hero-form.component';
 
 describe('HeroFormComponent', () => {
+    const waitForAsyncValidation = () => new Promise((resolve) => setTimeout(resolve, 350));
+
     let component: HeroFormComponent;
     let fixture: ComponentFixture<HeroFormComponent>;
     let dialogRefClose: Mock;
@@ -36,9 +38,21 @@ describe('HeroFormComponent', () => {
         expect(dialogRefClose).not.toHaveBeenCalled();
     });
 
-    it('should close the dialog with the parsed payload when submitting a valid form', () => {
+    it('should show required validation errors when submitting an empty form', () => {
+        component.submit();
+        fixture.detectChanges();
+
+        const errors = fixture.nativeElement.querySelectorAll('mat-error');
+        const messages = Array.from(errors).map((error) => (error as HTMLElement).textContent);
+
+        expect(messages).toContain('El nombre es obligatorio');
+        expect(messages).toContain('El universo es obligatorio');
+        expect(messages).toContain('La historia es obligatoria');
+    });
+
+    it('should close the dialog with the parsed payload when submitting a valid form', async () => {
         component.form.setValue({
-            name: 'Spider-Man',
+            name: 'Spider-Woman',
             realName: 'Peter Parker',
             universe: 'Marvel',
             history: 'Picado por una araña radiactiva.',
@@ -48,14 +62,34 @@ describe('HeroFormComponent', () => {
 
         component.submit();
 
+        await waitForAsyncValidation();
+
         expect(dialogRefClose).toHaveBeenCalledWith({
-            name: 'Spider-Man',
+            name: 'Spider-Woman',
             realName: 'Peter Parker',
             universe: 'Marvel',
             history: 'Picado por una araña radiactiva.',
             imageUrl: undefined,
             powers: ['Trepar muros', 'sentido arácnido'],
         });
+    });
+
+    it('should not close the dialog and should flag the name field when the name already exists', async () => {
+        component.form.setValue({
+            name: 'Spider-Man',
+            realName: 'Peter Parker',
+            universe: 'Marvel',
+            history: 'Picado por una araña radiactiva.',
+            imageUrl: '',
+            powers: '',
+        });
+
+        component.submit();
+
+        await waitForAsyncValidation();
+
+        expect(dialogRefClose).not.toHaveBeenCalled();
+        expect(component.form.controls.name.hasError('duplicateName')).toBe(true);
     });
 
     it('should close the dialog without a payload when cancelling', () => {

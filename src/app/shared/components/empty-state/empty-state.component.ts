@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
     imports: [MatIconModule],
     templateUrl: './empty-state.component.html',
     styleUrl: './empty-state.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyStateComponent {
     readonly icon = input('search_off');

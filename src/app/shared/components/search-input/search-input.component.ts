@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,11 +20,12 @@ const SEARCH_DEBOUNCE_MS = 500;
     ],
     templateUrl: './search-input.component.html',
     styleUrl: './search-input.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly _destroyRef = inject(DestroyRef);
 
-    readonly search = output<string>();
+    readonly searchChange = output<string>();
 
     readonly control = new FormControl('', { nonNullable: true });
 
@@ -33,8 +34,8 @@ export class SearchInputComponent {
             .pipe(
                 debounceTime(SEARCH_DEBOUNCE_MS),
                 distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
+                takeUntilDestroyed(this._destroyRef),
             )
-            .subscribe((value) => this.search.emit(value.trim()));
+            .subscribe((value) => this.searchChange.emit(value.trim()));
     }
 }

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -6,6 +6,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     imports: [MatPaginatorModule],
     templateUrl: './paginated-list.component.html',
     styleUrl: './paginated-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatedListComponent {
     readonly total = input.required<number>();

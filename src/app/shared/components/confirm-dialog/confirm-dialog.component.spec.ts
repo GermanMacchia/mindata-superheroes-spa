@@ -43,4 +43,24 @@ describe('ConfirmDialogComponent', () => {
 
         expect(dialogRefClose).toHaveBeenCalledWith(false);
     });
+
+    it('should close the dialog with true when clicking the confirm button', () => {
+        fixture.detectChanges();
+
+        const buttons: HTMLButtonElement[] = fixture.nativeElement.querySelectorAll('button');
+        const confirmButton = Array.from(buttons).find((button) => button.textContent?.includes('Eliminar'));
+        confirmButton?.click();
+
+        expect(dialogRefClose).toHaveBeenCalledWith(true);
+    });
+
+    it('should close the dialog with false when clicking the cancel button', () => {
+        fixture.detectChanges();
+
+        const buttons: HTMLButtonElement[] = fixture.nativeElement.querySelectorAll('button');
+        const cancelButton = Array.from(buttons).find((button) => button.textContent?.includes('Cancelar'));
+        cancelButton?.click();
+
+        expect(dialogRefClose).toHaveBeenCalledWith(false);
+    });
 });

@@ -7,20 +7,20 @@ const EMAIL_STORAGE_KEY = 'auth_email';
     providedIn: 'root',
 })
 export class AuthService {
-    private readonly email = signal(localStorage.getItem(EMAIL_STORAGE_KEY) ?? '');
-    private readonly router = inject(Router);
-    readonly isAuthenticated = computed(() => this.email().length > 0);
-    readonly userEmail = this.email.asReadonly();
+    private readonly _email = signal(localStorage.getItem(EMAIL_STORAGE_KEY) ?? '');
+    private readonly _router = inject(Router);
+    readonly isAuthenticated = computed(() => this._email().length > 0);
+    readonly userEmail = this._email.asReadonly();
 
     login(email: string, _password: string): void {
         localStorage.setItem(EMAIL_STORAGE_KEY, email);
-        this.email.set(email);
-        this.router.navigateByUrl('/heroes');
+        this._email.set(email);
+        this._router.navigateByUrl('/heroes');
     }
 
     logout(): void {
         localStorage.removeItem(EMAIL_STORAGE_KEY);
-        this.email.set('');
-        this.router.navigateByUrl('/login');
+        this._email.set('');
+        this._router.navigateByUrl('/login');
     }
 }

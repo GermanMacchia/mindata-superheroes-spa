@@ -12,19 +12,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding-bottom: 16px;
+    padding-bottom: 1rem;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 20%, rgba(0, 0, 0, 0) 70%);
     opacity: 0;
     transition: opacity 200ms ease;
     cursor: pointer;
+    outline: none;
 }
 
 .card__overlay-actions {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 0.5rem;
+    right: 0.5rem;
     display: flex;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .card__overlay-actions button {
@@ -39,7 +40,8 @@
     color: #ef9a9a;
 }
 
-.card:hover .card__overlay {
+.card:hover .card__overlay,
+.card__overlay:focus-within {
     opacity: 1;
 }
 
@@ -49,16 +51,18 @@
     letter-spacing: 0.05em;
 }
 
-.card__image {
-    display: block;
-    width: 100%;
+.card__image-wrapper {
+    position: relative;
     flex: 1;
     min-height: 0;
+}
+
+.card__image {
     object-fit: cover;
     object-position: top;
 }
 
 .card__footer {
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
     font-weight: 500;
 }

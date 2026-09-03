@@ -46,6 +46,17 @@ describe('LoginComponent', () => {
         expect(component.form.controls.email.touched).toBe(true);
     });
 
+    it('should show validation errors for email and password once touched', () => {
+        component.submit();
+        fixture.detectChanges();
+
+        const errors = fixture.nativeElement.querySelectorAll('mat-error');
+
+        expect(errors.length).toBe(2);
+        expect(errors[0].textContent).toContain('Ingresá un email válido');
+        expect(errors[1].textContent).toContain('La contraseña es obligatoria');
+    });
+
     it('should log in with any credentials and navigate to /heroes', () => {
         const loginSpy = vi.spyOn(authService, 'login');
         const navigateSpy = vi.spyOn(router, 'navigateByUrl');
@@ -55,5 +66,27 @@ describe('LoginComponent', () => {
 
         expect(loginSpy).toHaveBeenCalledWith('a@a.com', 'anything');
         expect(navigateSpy).toHaveBeenCalledWith('/heroes');
+    });
+
+    it('should submit via the form ngSubmit binding, not just by calling submit() directly', () => {
+        const loginSpy = vi.spyOn(authService, 'login');
+        vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+        component.form.setValue({ email: 'a@a.com', password: 'anything' });
+        fixture.detectChanges();
+
+        const form: HTMLFormElement = fixture.nativeElement.querySelector('form');
+        form.dispatchEvent(new Event('submit'));
+
+        expect(loginSpy).toHaveBeenCalledWith('a@a.com', 'anything');
+    });
+
+    it('should prevent navigation when the register link is clicked', () => {
+        fixture.detectChanges();
+
+        const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.login__register');
+        const event = new MouseEvent('click', { cancelable: true });
+        link.dispatchEvent(event);
+
+        expect(event.defaultPrevented).toBe(true);
     });
 });
