@@ -4,14 +4,20 @@
     </button>
 
     <div class="hero-detail">
-        <img
-            class="hero-detail__image"
-            role="img"
-            [src]="hero().imageUrl || '/no-photo.webp'"
-            [alt]="hero().name"
-        />
+        <div class="hero-detail__image-wrapper">
+            <img
+                class="hero-detail__image"
+                role="img"
+                [ngSrc]="hero().imageUrl || '/no-photo.webp'"
+                [alt]="hero().name"
+                fill
+                priority
+            />
+        </div>
 
         <div class="hero-detail__content">
+            <!-- el contenido lo asigna appUppercase en runtime vía element.textContent -->
+            <!-- eslint-disable-next-line @angular-eslint/template/elements-content -->
             <h1 class="hero-detail__name" [appUppercase]="hero().name"></h1>
             @if (hero().realName) {
                 <p class="hero-detail__real-name">{{ hero().realName }}</p>

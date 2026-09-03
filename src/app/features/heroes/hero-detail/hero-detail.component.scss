@@ -13,11 +13,16 @@
     gap: 1.5rem;
 }
 
-.hero-detail__image {
+.hero-detail__image-wrapper {
+    position: relative;
     flex: 0 0 20rem;
     align-self: flex-start;
     width: 20rem;
+    aspect-ratio: 3 / 4;
     max-height: 70vh;
+}
+
+.hero-detail__image {
     object-fit: cover;
     border-radius: 0.5rem;
 }
@@ -50,7 +55,7 @@
         flex-direction: column;
     }
 
-    .hero-detail__image {
+    .hero-detail__image-wrapper {
         width: 100%;
     }
 
