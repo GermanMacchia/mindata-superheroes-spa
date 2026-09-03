@@ -1,10 +1,14 @@
 <mat-card class="card" appearance="outlined">
-    <img
-        class="card__image"
-        role="img"
-        [src]="hero().imageUrl || '/no-photo.webp'"
-        [alt]="hero().name"
-    />
+    <div class="card__image-wrapper">
+        <img
+            class="card__image"
+            role="img"
+            [ngSrc]="hero().imageUrl || '/no-photo.webp'"
+            [alt]="hero().name"
+            [priority]="priority()"
+            fill
+        />
+    </div>
 
     <mat-card-header>
         <mat-card-title class="card__title" [appUppercase]="hero().name"></mat-card-title>
@@ -17,7 +21,15 @@
         <mat-card-footer class="card__footer">{{ hero().universe }}</mat-card-footer>
     }
 
-    <div class="card__overlay" (click)="viewHistory.emit(hero())">
+    <div
+        class="card__overlay"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'Ver historia de ' + hero().name"
+        (click)="viewHistory.emit(hero())"
+        (keydown.enter)="viewHistory.emit(hero())"
+        (keydown.space)="$event.preventDefault(); viewHistory.emit(hero())"
+    >
         <div class="card__overlay-actions">
             <button
                 mat-icon-button
