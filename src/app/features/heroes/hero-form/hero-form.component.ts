@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -24,6 +24,7 @@ type HeroFormResult = Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>;
     ],
     templateUrl: './hero-form.component.html',
     styleUrl: './hero-form.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroFormComponent {
     private readonly _fb = inject(FormBuilder);

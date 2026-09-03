@@ -1,4 +1,11 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    computed,
+    inject,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,6 +39,7 @@ const PAGE_CHANGE_DEBOUNCE_MS = 250;
     ],
     templateUrl: './hero-list.component.html',
     styleUrl: './hero-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroListComponent {
     private readonly _heroService = inject(HeroService);

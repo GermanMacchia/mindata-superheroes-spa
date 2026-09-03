@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,7 @@ import { AuthService } from '../services/auth.service';
     ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
     private readonly _fb = inject(FormBuilder);
