@@ -20,9 +20,10 @@
             />
         } @else {
             <div class="hero-list">
-                @for (hero of heroes(); track hero.id) {
+                @for (hero of heroes(); track i; let i = $index) {
                     <app-card
                         [hero]="hero"
+                        [priority]="i === 0"
                         (edit)="onEdit($event)"
                         (delete)="onDelete($event)"
                         (viewHistory)="onViewHistory($event)"

@@ -49,11 +49,13 @@
     letter-spacing: 0.05em;
 }
 
-.card__image {
-    display: block;
-    width: 100%;
+.card__image-wrapper {
+    position: relative;
     flex: 1;
     min-height: 0;
+}
+
+.card__image {
     object-fit: cover;
     object-position: top;
 }
