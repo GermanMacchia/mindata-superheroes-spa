@@ -38,6 +38,18 @@ describe('HeroFormComponent', () => {
         expect(dialogRefClose).not.toHaveBeenCalled();
     });
 
+    it('should show required validation errors when submitting an empty form', () => {
+        component.submit();
+        fixture.detectChanges();
+
+        const errors = fixture.nativeElement.querySelectorAll('mat-error');
+        const messages = Array.from(errors).map((error) => (error as HTMLElement).textContent);
+
+        expect(messages).toContain('El nombre es obligatorio');
+        expect(messages).toContain('El universo es obligatorio');
+        expect(messages).toContain('La historia es obligatoria');
+    });
+
     it('should close the dialog with the parsed payload when submitting a valid form', async () => {
         component.form.setValue({
             name: 'Spider-Woman',
