@@ -22,7 +22,7 @@ describe('SearchInputComponent', () => {
 
     it('should emit the trimmed search term after the debounce time', async () => {
         const searchSpy = vi.fn();
-        component.search.subscribe(searchSpy);
+        component.searchChange.subscribe(searchSpy);
 
         component.control.setValue('  batman  ');
         await new Promise((resolve) => setTimeout(resolve, 600));

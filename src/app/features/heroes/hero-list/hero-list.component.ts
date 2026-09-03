@@ -1,4 +1,11 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    computed,
+    inject,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,12 +39,13 @@ const PAGE_CHANGE_DEBOUNCE_MS = 250;
     ],
     templateUrl: './hero-list.component.html',
     styleUrl: './hero-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroListComponent {
-    private readonly heroService = inject(HeroService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly dialog = inject(MatDialog);
-    private readonly router = inject(Router);
+    private readonly _heroService = inject(HeroService);
+    private readonly _destroyRef = inject(DestroyRef);
+    private readonly _dialog = inject(MatDialog);
+    private readonly _router = inject(Router);
 
     readonly pageIndex = signal(0);
     readonly pageSize = signal(DEFAULT_PAGE_SIZE);
@@ -47,12 +55,12 @@ export class HeroListComponent {
 
     readonly noResults = computed(() => this.heroes().length === 0 && this.searchTerm().length > 0);
 
-    private readonly pageChange = new Subject<PageEvent>();
+    private readonly _pageChange = new Subject<PageEvent>();
 
     constructor() {
         this.fetchData();
 
-        this.pageChange
+        this._pageChange
             .pipe(debounceTime(PAGE_CHANGE_DEBOUNCE_MS), takeUntilDestroyed())
             .subscribe((event) => {
                 this.pageIndex.set(event.pageIndex);
@@ -62,7 +70,7 @@ export class HeroListComponent {
     }
 
     onPageChange(event: PageEvent): void {
-        this.pageChange.next(event);
+        this._pageChange.next(event);
     }
 
     onSearch(term: string): void {
@@ -80,22 +88,22 @@ export class HeroListComponent {
     }
 
     private openHeroDialog(hero?: SuperHero): void {
-        this.dialog
+        this._dialog
             .open(HeroFormComponent, { width: '600px', data: hero })
             .afterClosed()
             .subscribe((result) => {
                 if (!result) return;
 
                 const request = hero
-                    ? this.heroService.updateHero(hero.id, result)
-                    : this.heroService.createHero(result);
+                    ? this._heroService.updateHero(hero.id, result)
+                    : this._heroService.createHero(result);
 
                 request.subscribe(() => this.fetchData());
             });
     }
 
     onDelete(hero: SuperHero): void {
-        this.dialog
+        this._dialog
             .open(ConfirmDialogComponent, {
                 width: '400px',
                 data: {
@@ -107,20 +115,20 @@ export class HeroListComponent {
             .subscribe((confirmed) => {
                 if (!confirmed) return;
 
-                this.heroService.deleteHero(hero.id).subscribe(() => this.fetchData());
+                this._heroService.deleteHero(hero.id).subscribe(() => this.fetchData());
             });
     }
 
     onViewHistory(hero: SuperHero): void {
-        this.router.navigate(['/heroe', hero.id]);
+        this._router.navigate(['/heroe', hero.id]);
     }
 
     private fetchData(): void {
         const offset = this.pageIndex() * this.pageSize();
 
-        this.heroService
+        this._heroService
             .getHeroes(offset, this.pageSize(), this.searchTerm())
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntilDestroyed(this._destroyRef))
             .subscribe((result) => {
                 // La página actual quedó vacía (ej: se borró el único elemento restante).
                 // Retrocedemos a la última página con contenido y refetcheamos.

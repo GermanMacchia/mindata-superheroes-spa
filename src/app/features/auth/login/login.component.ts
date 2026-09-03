@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,22 +21,23 @@ import { AuthService } from '../services/auth.service';
     ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-    private readonly fb = inject(FormBuilder);
-    private readonly authService = inject(AuthService);
+    private readonly _fb = inject(FormBuilder);
+    private readonly _authService = inject(AuthService);
 
-    readonly form = this.fb.nonNullable.group({
+    readonly form = this._fb.nonNullable.group({
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
     });
 
-    private readonly formValue = toSignal(this.form.valueChanges, {
+    private readonly _formValue = toSignal(this.form.valueChanges, {
         initialValue: this.form.getRawValue(),
     });
 
     readonly bothEmpty = computed(() => {
-        const { email, password } = this.formValue();
+        const { email, password } = this._formValue();
         return !email?.trim() && !password?.trim();
     });
 
@@ -47,6 +48,6 @@ export class LoginComponent {
         }
 
         const { email, password } = this.form.getRawValue();
-        this.authService.login(email, password);
+        this._authService.login(email, password);
     }
 }

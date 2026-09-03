@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -11,6 +11,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
     imports: [RouterOutlet, HeaderComponent, MatProgressSpinnerModule],
     templateUrl: './app.html',
     styleUrl: './app.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
     protected readonly title = signal('mindata-superheroes-spa');
