@@ -14,11 +14,11 @@ import { UppercaseDirective } from '@app/shared/directives/uppercase.directive';
     styleUrl: './hero-detail.component.scss',
 })
 export class HeroDetailComponent {
-    private readonly router = inject(Router);
+    private readonly _router = inject(Router);
 
     readonly hero = input.required<SuperHero>();
 
     goBack(): void {
-        this.router.navigate(['/heroes']);
+        this._router.navigate(['/heroes']);
     }
 }

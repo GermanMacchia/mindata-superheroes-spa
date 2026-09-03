@@ -12,11 +12,11 @@ import { AuthService } from '@app/features/auth/services/auth.service';
     styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-    private readonly authService = inject(AuthService);
+    private readonly _authService = inject(AuthService);
 
-    readonly userEmail = this.authService.userEmail;
+    readonly userEmail = this._authService.userEmail;
 
     logout(): void {
-        this.authService.logout();
+        this._authService.logout();
     }
 }

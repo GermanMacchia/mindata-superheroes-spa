@@ -1,6 +1,6 @@
 <div class="hero-list__content">
     <div class="hero-list__toolbar">
-        <app-search-input (search)="onSearch($event)" />
+        <app-search-input (searchChange)="onSearch($event)" />
         <button mat-flat-button (click)="openCreateDialog()">
             <mat-icon>add</mat-icon>
             Crear superhéroe

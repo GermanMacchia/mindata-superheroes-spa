@@ -26,20 +26,23 @@ type HeroFormResult = Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>;
     styleUrl: './hero-form.component.scss',
 })
 export class HeroFormComponent {
-    private readonly fb = inject(FormBuilder);
-    private readonly dialogRef = inject(MatDialogRef<HeroFormComponent, HeroFormResult>);
-    private readonly data = inject<SuperHero | undefined>(MAT_DIALOG_DATA, { optional: true });
+    private readonly _fb = inject(FormBuilder);
+    private readonly _dialogRef = inject(MatDialogRef<HeroFormComponent, HeroFormResult>);
+    private readonly _data = inject<SuperHero | undefined>(MAT_DIALOG_DATA, { optional: true });
 
-    readonly isEdit = !!this.data;
+    readonly isEdit = !!this._data;
     readonly universes = ['Marvel', 'DC', 'Otro'];
 
-    readonly form = this.fb.nonNullable.group({
-        name: [this.data?.name ?? '', Validators.required],
-        realName: [this.data?.realName ?? ''],
-        universe: this.fb.control<SuperHero['universe']>(this.data?.universe, Validators.required),
-        history: [this.data?.history ?? '', Validators.required],
-        imageUrl: [this.data?.imageUrl ?? ''],
-        powers: [this.data?.powers?.join(', ') ?? ''],
+    readonly form = this._fb.nonNullable.group({
+        name: [this._data?.name ?? '', Validators.required],
+        realName: [this._data?.realName ?? ''],
+        universe: this._fb.control<SuperHero['universe']>(
+            this._data?.universe,
+            Validators.required,
+        ),
+        history: [this._data?.history ?? '', Validators.required],
+        imageUrl: [this._data?.imageUrl ?? ''],
+        powers: [this._data?.powers?.join(', ') ?? ''],
     });
 
     submit(): void {
@@ -50,7 +53,7 @@ export class HeroFormComponent {
 
         const { name, realName, universe, history, imageUrl, powers } = this.form.getRawValue();
 
-        this.dialogRef.close({
+        this._dialogRef.close({
             name,
             realName: realName || 'Desconocido',
             universe,
@@ -66,6 +69,6 @@ export class HeroFormComponent {
     }
 
     cancel(): void {
-        this.dialogRef.close();
+        this._dialogRef.close();
     }
 }

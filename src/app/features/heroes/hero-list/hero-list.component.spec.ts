@@ -82,17 +82,24 @@ describe('HeroListComponent', () => {
 
     it('should open the form dialog and create a hero when it resolves with data', () => {
         const payload = { name: 'Test Hero', history: 'Test history' };
-        vi.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(payload) } as MatDialogRef<unknown>);
+        vi.spyOn(dialog, 'open').mockReturnValue({
+            afterClosed: () => of(payload),
+        } as MatDialogRef<unknown>);
         const createSpy = vi.spyOn(heroService, 'createHero');
 
         component.openCreateDialog();
 
-        expect(dialog.open).toHaveBeenCalledWith(HeroFormComponent, { width: '600px', data: undefined });
+        expect(dialog.open).toHaveBeenCalledWith(HeroFormComponent, {
+            width: '600px',
+            data: undefined,
+        });
         expect(createSpy).toHaveBeenCalledWith(payload);
     });
 
     it('should not create a hero when the create dialog is cancelled', () => {
-        vi.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(undefined) } as MatDialogRef<unknown>);
+        vi.spyOn(dialog, 'open').mockReturnValue({
+            afterClosed: () => of(undefined),
+        } as MatDialogRef<unknown>);
         const createSpy = vi.spyOn(heroService, 'createHero');
 
         component.openCreateDialog();
@@ -103,7 +110,9 @@ describe('HeroListComponent', () => {
     it('should open the form dialog and update a hero when editing', () => {
         const hero = HEROES_SEED[0];
         const payload = { name: 'Updated Name', history: hero.history };
-        vi.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(payload) } as MatDialogRef<unknown>);
+        vi.spyOn(dialog, 'open').mockReturnValue({
+            afterClosed: () => of(payload),
+        } as MatDialogRef<unknown>);
         const updateSpy = vi.spyOn(heroService, 'updateHero');
 
         component.onEdit(hero);
@@ -114,7 +123,9 @@ describe('HeroListComponent', () => {
 
     it('should delete a hero when the confirm dialog is accepted', () => {
         const hero = HEROES_SEED[0];
-        vi.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as MatDialogRef<unknown>);
+        vi.spyOn(dialog, 'open').mockReturnValue({
+            afterClosed: () => of(true),
+        } as MatDialogRef<unknown>);
         const deleteSpy = vi.spyOn(heroService, 'deleteHero');
 
         component.onDelete(hero);
@@ -130,7 +141,9 @@ describe('HeroListComponent', () => {
     });
 
     it('should not delete a hero when the confirm dialog is cancelled', () => {
-        vi.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(false) } as MatDialogRef<unknown>);
+        vi.spyOn(dialog, 'open').mockReturnValue({
+            afterClosed: () => of(false),
+        } as MatDialogRef<unknown>);
         const deleteSpy = vi.spyOn(heroService, 'deleteHero');
 
         component.onDelete(HEROES_SEED[0]);
@@ -150,11 +163,14 @@ describe('HeroListComponent', () => {
         await new Promise((resolve) => setTimeout(resolve, 350));
         await fixture.whenStable();
 
-        const onEditSpy = vi.spyOn(component, 'onEdit').mockImplementation(() => {});
-        const onDeleteSpy = vi.spyOn(component, 'onDelete').mockImplementation(() => {});
-        const onViewHistorySpy = vi.spyOn(component, 'onViewHistory').mockImplementation(() => {});
+        const onEditSpy = vi.spyOn(component, 'onEdit').mockImplementation(() => undefined);
+        const onDeleteSpy = vi.spyOn(component, 'onDelete').mockImplementation(() => undefined);
+        const onViewHistorySpy = vi
+            .spyOn(component, 'onViewHistory')
+            .mockImplementation(() => undefined);
 
-        const card = fixture.debugElement.query(By.directive(CardComponent)).componentInstance as CardComponent;
+        const card = fixture.debugElement.query(By.directive(CardComponent))
+            .componentInstance as CardComponent;
         const hero = HEROES_SEED[0];
 
         card.edit.emit(hero);
@@ -170,13 +186,17 @@ describe('HeroListComponent', () => {
         await new Promise((resolve) => setTimeout(resolve, 350));
         await fixture.whenStable();
 
-        const onSearchSpy = vi.spyOn(component, 'onSearch').mockImplementation(() => {});
-        const openCreateDialogSpy = vi.spyOn(component, 'openCreateDialog').mockImplementation(() => {});
-        const onPageChangeSpy = vi.spyOn(component, 'onPageChange').mockImplementation(() => {});
+        const onSearchSpy = vi.spyOn(component, 'onSearch').mockImplementation(() => undefined);
+        const openCreateDialogSpy = vi
+            .spyOn(component, 'openCreateDialog')
+            .mockImplementation(() => undefined);
+        const onPageChangeSpy = vi
+            .spyOn(component, 'onPageChange')
+            .mockImplementation(() => undefined);
 
         const searchInput = fixture.debugElement.query(By.directive(SearchInputComponent))
             .componentInstance as SearchInputComponent;
-        searchInput.search.emit('batman');
+        searchInput.searchChange.emit('batman');
 
         const createButton: HTMLButtonElement = fixture.nativeElement.querySelector(
             '.hero-list__toolbar button',

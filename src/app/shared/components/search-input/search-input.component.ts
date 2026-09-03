@@ -22,9 +22,9 @@ const SEARCH_DEBOUNCE_MS = 500;
     styleUrl: './search-input.component.scss',
 })
 export class SearchInputComponent {
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly _destroyRef = inject(DestroyRef);
 
-    readonly search = output<string>();
+    readonly searchChange = output<string>();
 
     readonly control = new FormControl('', { nonNullable: true });
 
@@ -33,8 +33,8 @@ export class SearchInputComponent {
             .pipe(
                 debounceTime(SEARCH_DEBOUNCE_MS),
                 distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
+                takeUntilDestroyed(this._destroyRef),
             )
-            .subscribe((value) => this.search.emit(value.trim()));
+            .subscribe((value) => this.searchChange.emit(value.trim()));
     }
 }

@@ -13,17 +13,17 @@ const RESOURCE = 'heroes';
     providedIn: 'root',
 })
 export class HeroService {
-    private readonly mockApi = inject(MockApiService);
+    private readonly _mockApi = inject(MockApiService);
 
     constructor() {
-        this.mockApi.seed(RESOURCE, HEROES_SEED);
+        this._mockApi.seed(RESOURCE, HEROES_SEED);
     }
 
     getHeroes(offset: number, limit: number, search?: string): Observable<PagedResult<SuperHero>> {
         const term = search?.trim().toLowerCase();
         const filter = term ? (hero: SuperHero) => this.matchesSearch(hero, term) : undefined;
 
-        return this.mockApi.paginate<SuperHero>(RESOURCE, offset, limit, filter);
+        return this._mockApi.paginate<SuperHero>(RESOURCE, offset, limit, filter);
     }
 
     createHero(data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>): Observable<SuperHero> {
@@ -35,22 +35,22 @@ export class HeroService {
             updatedAt: now,
         };
 
-        return this.mockApi.create<SuperHero>(RESOURCE, hero);
+        return this._mockApi.create<SuperHero>(RESOURCE, hero);
     }
 
     updateHero(
         id: string,
         data: Omit<SuperHero, 'id' | 'createdAt' | 'updatedAt'>,
     ): Observable<SuperHero> {
-        return this.mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
+        return this._mockApi.update<SuperHero>(RESOURCE, id, { ...data, updatedAt: new Date() });
     }
 
     getHeroById(id: string): Observable<SuperHero | undefined> {
-        return this.mockApi.getById<SuperHero>(RESOURCE, id);
+        return this._mockApi.getById<SuperHero>(RESOURCE, id);
     }
 
     deleteHero(id: string): Observable<void> {
-        return this.mockApi.delete<SuperHero>(RESOURCE, id);
+        return this._mockApi.delete<SuperHero>(RESOURCE, id);
     }
 
     private matchesSearch(hero: SuperHero, term: string): boolean {
