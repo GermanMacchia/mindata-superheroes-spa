@@ -17,6 +17,7 @@
     opacity: 0;
     transition: opacity 200ms ease;
     cursor: pointer;
+    outline: none;
 }
 
 .card__overlay-actions {
@@ -39,7 +40,8 @@
     color: #ef9a9a;
 }
 
-.card:hover .card__overlay {
+.card:hover .card__overlay,
+.card__overlay:focus-within {
     opacity: 1;
 }
 
